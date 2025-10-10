@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Copilot Training - Day 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai {
+            color: #1e5a96;
+            background: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+        }
+
+        .spry {
+            color: #ff6b35;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-title {
+            color: #1e5a96;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #ff6b35;
+            padding-left: 1rem;
+        }
+
+        .slide-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
+            border-left: 4px solid #ff6b35;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .insight-title {
+            color: #ff6b35;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-box {
+            background: linear-gradient(135deg, #e6f3ff 0%, #d0e8ff 100%);
+            border: 2px solid #2d7bb6;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .question-title {
+            color: #1e5a96;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question-answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #2d7bb6;
+            color: #333;
+        }
+
+        .question-answer.show {
+            display: block;
+        }
+
+        .mcq-box {
+            background: #f8f9fa;
+            border: 2px solid #1e5a96;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .mcq-title {
+            color: #1e5a96;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .mcq-option {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .mcq-option:hover {
+            border-color: #2d7bb6;
+            transform: translateX(5px);
+        }
+
+        .mcq-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .mcq-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .mcq-feedback {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .mcq-feedback.show {
+            display: block;
+        }
+
+        .demo-box {
+            background: linear-gradient(135deg, #fffbea 0%, #fff4cc 100%);
+            border: 3px solid #ffc107;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+        }
+
+        .demo-title {
+            color: #e65100;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .business-problem {
+            background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .business-problem h2 {
+            color: #ff6b35;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .workflow-card {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .workflow-title {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .security-alert {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 4px solid #d32f2f;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .security-title {
+            color: #c62828;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th {
+            background: #1e5a96;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .best-practice {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .best-practice-title {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+            border-left: 4px solid #fbc02d;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .tip-title {
+            color: #f57f17;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+
+        .policy-card {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-left: 4px solid #9c27b0;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .policy-title {
+            color: #7b1fa2;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background: white;
+            border: 2px solid #2d7bb6;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1e5a96;
+            margin: 0.5rem 0;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-text">
+            <span class="ai">Ai</span><span class="spry">SPRY</span>
+        </div>
+        <h1>GitHub Copilot Training - Day 4</h1>
+        <p>Code Reviews and Automation (PRs)</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Duration: 3 Hours | Focus: Automated Quality & Security</p>
+    </div>
+
+    <div class="container">
+        <!-- Business Problem Continuation -->
+        <div class="business-problem">
+            <h2>🎯 RetailTech Challenge - Day 4</h2>
+            <h3 style="margin-top: 1rem;">The Code Review Bottleneck</h3>
+            <p style="margin-top: 1rem; line-height: 1.8;">
+                RetailTech's development velocity is increasing with Copilot, but a new problem has emerged:
+            </p>
+            <ul style="margin-top: 1rem;">
+                <li><strong>PRs piling up:</strong> Average review time: 2-3 days</li>
+                <li><strong>Inconsistent quality:</strong> Some PRs have thorough reviews, others get rubber-stamped</li>
+                <li><strong>Security concerns:</strong> Vulnerabilities slipping through manual reviews</li>
+                <li><strong>Testing gaps:</strong> Not all code changes include comprehensive tests</li>
+                <li><strong>Documentation drift:</strong> Code changes without updated docs</li>
+                <li><strong>Team frustration:</strong> Developers blocked waiting for approvals</li>
+            </ul>
+            <p style="margin-top: 1rem; font-weight: bold; color: #ff6b35;">
+                How can we automate code reviews without sacrificing quality?
+            </p>
+        </div>
+
+        <!-- Slide 1: Automated Code Review Setup -->
+        <div class="slide">
+            <h2 class="slide-title">1. Automated Code Review Setup and Configuration</h2>
+            <div class="slide-content">
+                <p><strong>Intelligent, Automated Quality Gates</strong></p>
+                <p>GitHub Copilot can automatically review pull requests, providing instant feedback on code quality, security, and best practices.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>DevOps Research and Assessment (2024):</strong> Teams using automated code review tools reduce PR cycle time by 58% and catch 73% more security vulnerabilities than manual review alone. Elite performers combine automated and human review, achieving 90% defect detection while maintaining 4-hour PR cycle times.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: DORA State of DevOps Report 2024</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q1')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q1" class="question-answer">
+                        <strong>Q: RetailTech's senior developers spend 6 hours per week reviewing PRs. Junior developers wait 2-3 days for feedback. How does automated review solve both problems?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Automated review creates a virtuous cycle:</strong>
+                            <br><br>
+                            <strong>For Senior Developers:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Copilot handles first-pass review: style, patterns, common bugs</li>
+                                <li>Automated tests verify functionality</li>
+                                <li>Security scans catch vulnerabilities</li>
+                                <li>Seniors only review: architecture, business logic, complex decisions</li>
+                                <li><strong>Result:</strong> 6 hours → 2 hours reviewing, 4 hours coding</li>
+                            </ul>
+                            <br>
+                            <strong>For Junior Developers:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Instant feedback from automated review (seconds vs. days)</li>
+                                <li>Learn from Copilot suggestions immediately</li>
+                                <li>Fix issues before senior review</li>
+                                <li>Senior reviews are shorter, more focused</li>
+                                <li><strong>Result:</strong> 2-3 days → 4-6 hours total cycle time</li>
+                            </ul>
+                            <strong>Team Impact:</strong> 5x faster feedback, higher quality, happier developers
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Components of Automated Code Review:</h3>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">1. 🤖 Copilot Pull Request Review</div>
+                    <p><strong>What it checks:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Code quality and maintainability</li>
+                        <li>Adherence to coding standards</li>
+                        <li>Potential bugs and logic errors</li>
+                        <li>Performance issues</li>
+                        <li>Documentation completeness</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Output:</strong> Inline comments on specific lines with suggestions</p>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">2. 🛡️ Security Scanning</div>
+                    <p><strong>What it detects:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Dependency vulnerabilities (Dependabot)</li>
+                        <li>Code scanning alerts (CodeQL)</li>
+                        <li>Secret scanning (API keys, tokens)</li>
+                        <li>Common security patterns (OWASP Top 10)</li>
+                    </ul>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">3. ✅ Automated Testing</div>
+                    <p><strong>Verification includes:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Unit test execution and coverage</li>
+                        <li>Integration test suites</li>
+                        <li>End-to-end test scenarios</li>
+                        <li>Performance benchmarks</li>
+                    </ul>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">4. 📊 Code Quality Metrics</div>
+                    <p><strong>Automated checks:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Code complexity analysis</li>
+                        <li>Test coverage thresholds</li>
+                        <li>Code duplication detection</li>
+                        <li>Static analysis (linting)</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Setup Configuration Steps:</h3>
+
+                <ol>
+                    <li><strong>Enable GitHub Copilot for Pull Requests</strong>
+                        <ul>
+                            <li>Repository Settings → Code security and analysis</li>
+                            <li>Enable Copilot Pull Request summaries</li>
+                            <li>Configure review preferences (automatic vs. on-demand)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Configure Branch Protection Rules</strong>
+                        <ul>
+                            <li>Require pull request reviews before merging</li>
+                            <li>Require status checks to pass (CI/CD, tests)</li>
+                            <li>Require conversation resolution</li>
+                            <li>Enforce automated review completion</li>
+                        </ul>
+                    </li>
+                    <li><strong>Set Up GitHub Actions Workflows</strong>
+                        <ul>
+                            <li>Automated testing on PR creation</li>
+                            <li>Security scanning integration</li>
+                            <li>Code quality checks (SonarCloud, CodeClimate)</li>
+                            <li>Performance benchmarking</li>
+                        </ul>
+                    </li>
+                    <li><strong>Define Review Policies</strong>
+                        <ul>
+                            <li>Minimum test coverage requirements (e.g., 80%)</li>
+                            <li>Code complexity thresholds</li>
+                            <li>Documentation requirements</li>
+                            <li>Security vulnerability tolerance</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: Layered Review Strategy</div>
+                    <p><strong>Optimal workflow combines automation + human expertise:</strong></p>
+                    <ol style="margin-top: 0.5rem;">
+                        <li><strong>Layer 1 - Automated (Instant):</strong> Linting, formatting, basic quality checks</li>
+                        <li><strong>Layer 2 - Copilot Review (1-2 min):</strong> Code patterns, potential bugs, suggestions</li>
+                        <li><strong>Layer 3 - Automated Tests (5-10 min):</strong> Functional verification, security scans</li>
+                        <li><strong>Layer 4 - Human Review (30-60 min):</strong> Architecture, business logic, edge cases</li>
+                    </ol>
+                    <p style="margin-top: 0.5rem;"><strong>Result:</strong> Most issues caught in layers 1-3, humans focus on high-value review</p>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Integration with Existing Tools:</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tool Category</th>
+                            <th>Popular Options</th>
+                            <th>Copilot Integration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CI/CD</strong></td>
+                            <td>GitHub Actions, Jenkins, CircleCI</td>
+                            <td>Trigger Copilot review on PR events</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Code Quality</strong></td>
+                            <td>SonarQube, CodeClimate, ESLint</td>
+                            <td>Copilot respects and enforces rules</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security</strong></td>
+                            <td>Snyk, Dependabot, CodeQL</td>
+                            <td>Copilot highlights security concerns</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Testing</strong></td>
+                            <td>Jest, Pytest, JUnit</td>
+                            <td>Generates missing test cases</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Project Management</strong></td>
+                            <td>Jira, Azure DevOps</td>
+                            <td>Links PRs to tickets, updates status</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Setting Up Automated Review</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Enabling Copilot PR review in repository settings</li>
+                    <li>Configuring branch protection rules</li>
+                    <li>Creating GitHub Actions workflow for automated checks</li>
+                    <li>Setting up CodeQL for security scanning</li>
+                    <li>Integrating SonarCloud for code quality</li>
+                    <li>Creating a PR and watching automated review in action</li>
+                    <li>Reviewing Copilot's suggestions and comments</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> This demonstration shows complete automation setup. Configuration varies by organization. Observe the principles and adapt to your environment. Practice with the recorded module in your test repository.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the primary benefit of layered review strategy (automated + human)?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    A) It eliminates the need for human reviewers completely
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq1')">
+                    B) Automation catches routine issues quickly, freeing humans to focus on architecture and business logic
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    C) It makes code review slower but more thorough
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    D) It only works for small teams
+                </div>
+                <div id="mcq1" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Automation ROI Analysis (2024):</strong> Organizations implementing automated code review report: 58% faster PR cycle time, 73% more security vulnerabilities caught, 40% reduction in production bugs, and 35% improvement in developer satisfaction. Initial setup takes 2-4 hours; payback period is typically 1-2 weeks.</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Pull Request Automation & Enterprise Policies -->
+        <div class="slide">
+            <h2 class="slide-title">2. Pull Request Automation and Enterprise Policy Management</h2>
+            <div class="slide-content">
+                <p><strong>Standardizing Quality at Scale</strong></p>
+                <p>Enterprise-grade PR automation ensures consistent standards across teams, projects, and repositories.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>GitHub Enterprise Survey (2024):</strong> Organizations with 100+ developers report 3.2x more consistent code quality after implementing enterprise policies. Teams without standardized policies experience 47% variance in code quality between projects. Policy automation reduces governance overhead by 65% while improving compliance.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: GitHub Enterprise Best Practices Report</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q2')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q2" class="question-answer">
+                        <strong>Q: RetailTech is growing fast. They now have 3 teams working on different services. How do they ensure consistent code quality across all teams without micromanaging?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Enterprise policies create consistency through automation, not micromanagement:</strong>
+                            <br><br>
+                            <strong>The Problem Without Policies:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Team A: Requires 90% test coverage</li>
+                                <li>Team B: No coverage requirements</li>
+                                <li>Team C: Requires 70% coverage but doesn't enforce</li>
+                                <li>Result: Inconsistent quality, unpredictable bugs, difficult onboarding</li>
+                            </ul>
+                            <br>
+                            <strong>The Solution With Enterprise Policies:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li><strong>Organization-wide standards:</strong> 80% test coverage minimum for all repos</li>
+                                <li><strong>Automated enforcement:</strong> PRs blocked if coverage drops below threshold</li>
+                                <li><strong>Flexible overrides:</strong> Security team can require 95% for payment code</li>
+                                <li><strong>Automated reporting:</strong> Leadership dashboard shows compliance</li>
+                                <li><strong>Consistent onboarding:</strong> New developers see same standards everywhere</li>
+                            </ul>
+                            <br>
+                            <strong>Key Insight:</strong> Policies codify team agreements, automation enforces them consistently
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">PR Automation Features:</h3>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">1. 📝 Automated PR Summaries</div>
+                    <p><strong>Copilot automatically generates:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Clear summary of changes</li>
+                        <li>Impact analysis (what files/features affected)</li>
+                        <li>Risk assessment (high/medium/low)</li>
+                        <li>Suggested reviewers based on code ownership</li>
+                        <li>Link to related issues/tickets</li>
+                    </ul>
+                    <div class="code-example" style="margin-top: 1rem; font-size: 0.9rem;">
+## PR Summary (Auto-generated by Copilot)
+
+**Changes:** Added real-time inventory tracking feature
+**Files Modified:** 12 files (8 new, 4 modified)
+**Tests Added:** 24 unit tests, 6 integration tests
+**Coverage Impact:** +3.2% (now 82.4%)
+**Risk Level:** Medium (new WebSocket integration)
+
+**Key Changes:**
+- Implemented WebSocket server for real-time updates
+- Added Redis pub/sub for inventory events
+- Created InventoryService with event broadcasting
+- Updated Product model with stock listeners
+
+**Suggested Reviewers:** @john-backend @sarah-architecture
+**Related Issues:** Closes #234, Related to #189
+                    </div>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">2. ✅ Automated Testing Integration</div>
+                    <p><strong>Continuous validation:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Run tests on every PR commit</li>
+                        <li>Block merge if tests fail</li>
+                        <li>Generate coverage reports</li>
+                        <li>Track test performance trends</li>
+                    </ul>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">3. 🎯 Smart PR Assignment</div>
+                    <p><strong>Intelligent reviewer selection:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>CODEOWNERS file integration</li>
+                        <li>Analyze file changes and assign experts</li>
+                        <li>Workload balancing across team</li>
+                        <li>Track reviewer response times</li>
+                    </ul>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">4. 📋 PR Templates and Checklists</div>
+                    <p><strong>Standardized workflows:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Required fields for PR description</li>
+                        <li>Testing checklist verification</li>
+                        <li>Security review requirements</li>
+                        <li>Documentation update confirmation</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Enterprise Policy Management:</h3>
+
+                <div class="policy-card">
+                    <div class="policy-title">Organization-Wide Policies</div>
+                    <p><strong>Centralized governance:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Code Quality Standards:</strong> Minimum test coverage (e.g., 80%), complexity thresholds, documentation requirements</li>
+                        <li><strong>Security Requirements:</strong> Mandatory security scans, vulnerability severity blocking, secret detection</li>
+                        <li><strong>Review Requirements:</strong> Minimum reviewers (2+), required approval from security team for sensitive code</li>
+                        <li><strong>Branch Protection:</strong> No direct commits to main, require PR reviews, require status checks</li>
+                    </ul>
+                </div>
+
+                <div class="policy-card">
+                    <div class="policy-title">Repository-Specific Policies</div>
+                    <p><strong>Flexible enforcement:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Critical Services:</strong> Higher coverage (95%), mandatory security review, performance benchmarks</li>
+                        <li><strong>Internal Tools:</strong> Standard coverage (70%), simplified review process</li>
+                        <li><strong>Experimental Projects:</strong> Relaxed policies for rapid prototyping</li>
+                        <li><strong>Override Capabilities:</strong> Emergency fixes with proper justification and audit trail</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Policy Configuration Example:</h3>
+                <div class="code-example">
+# .github/workflows/pr-automation.yml
+name: PR Automation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  copilot-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Copilot PR Summary
+        uses: github/copilot-pr-summary@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run linting
+        run: npm run lint
+      - name: Check test coverage
+        run: |
+          npm test -- --coverage
+          COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+            echo "Coverage $COVERAGE% below 80% threshold"
+            exit 1
+          fi
+  
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+      - name: Dependency Check
+        uses: dependency-check/dependency-check-action@main
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: Progressive Policy Rollout</div>
+                    <p><strong>Don't implement all policies at once!</strong></p>
+                    <ol style="margin-top: 0.5rem;">
+                        <li><strong>Week 1:</strong> Enable Copilot PR summaries (non-blocking, educational)</li>
+                        <li><strong>Week 2:</strong> Add automated linting and formatting checks</li>
+                        <li><strong>Week 3:</strong> Enable basic test coverage requirements (70%)</li>
+                        <li><strong>Week 4:</strong> Add security scanning (warning mode)</li>
+                        <li><strong>Month 2:</strong> Make security scans blocking for high/critical issues</li>
+                        <li><strong>Month 3:</strong> Increase coverage requirements to 80%</li>
+                    </ol>
+                    <p style="margin-top: 0.5rem;"><strong>Result:</strong> Team adapts gradually, buy-in increases, resistance decreases</p>
+                </div>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Enterprise Policy Setup</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Creating organization-wide policy templates</li>
+                    <li>Setting up branch protection rules with required checks</li>
+                    <li>Configuring CODEOWNERS for automatic reviewer assignment</li>
+                    <li>Creating PR templates with required checklist items</li>
+                    <li>Setting up GitHub Actions for automated policy enforcement</li>
+                    <li>Configuring different policies for different repository types</li>
+                    <li>Testing policy enforcement with sample PRs</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> Enterprise policy management requires careful planning and stakeholder buy-in. This demonstration shows technical implementation. Adapt policies to your organization's needs and culture.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the recommended approach for rolling out enterprise policies?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    A) Implement all policies at once for maximum impact
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq2')">
+                    B) Progressive rollout over weeks/months, starting non-blocking and gradually enforcing
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    C) Only apply policies to new projects
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    D) Let each team decide their own policies
+                </div>
+                <div id="mcq2" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Policy Adoption Success Rates (2024):</strong> Organizations using progressive policy rollout achieve 87% team adoption vs. 34% for immediate full enforcement. Key success factor: Start with non-blocking "educational mode" policies that provide feedback without disrupting workflow.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Security Vulnerability Detection -->
+        <div class="slide">
+            <h2 class="slide-title">3. Security Vulnerability Detection and Remediation</h2>
+            <div class="slide-content">
+                <p><strong>Automated Security: Catching Issues Before Production</strong></p>
+                <p>GitHub's security features, combined with Copilot, create a comprehensive security scanning and remediation system.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Verizon Data Breach Report (2024):</strong> 45% of breaches exploit known vulnerabilities that had patches available. Organizations using automated security scanning catch 89% of vulnerabilities before production deployment. Average time to fix drops from 38 days (manual) to 4 days (automated). Cost of prevention: $50-200 per vulnerability. Cost of breach: $4.45 million average.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Verizon Data Breach Investigations Report 2024</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q3')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q3" class="question-answer">
+                        <strong>Q: RetailTech discovers a critical SQL injection vulnerability in their product search feature during automated scanning. The PR is already approved. What's the safest response?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Immediate response protocol:</strong>
+                            <ol style="margin-top: 0.5rem;">
+                                <li><strong>Block Merge Immediately:</strong> Security policy should auto-block critical vulnerabilities</li>
+                                <li><strong>Alert Security Team:</strong> Critical issues trigger immediate notifications</li>
+                                <li><strong>Use Copilot to Suggest Fix:</strong> /fix command on vulnerable code</li>
+                                <li><strong>Generate Test Cases:</strong> Create tests that exploit the vulnerability to ensure fix works</li>
+                                <li><strong>Security Review:</strong> Manual verification by security expert</li>
+                                <li><strong>Document in Security Log:</strong> Track for audit and learning</li>
+                                <li><strong>Scan Existing Code:</strong> Check if vulnerability exists elsewhere</li>
+                            </ol>
+                            <strong>Key Insight:</strong> Automated scanning caught it before production. Without automation, this could have been a data breach incident costing millions.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">GitHub Security Features:</h3>
+
+                <div class="security-alert">
+                    <div class="security-title">1. 🔍 CodeQL Analysis</div>
+                    <p><strong>What it detects:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>SQL injection, XSS, command injection</li>
+                        <li>Path traversal, insecure deserialization</li>
+                        <li>Authentication/authorization flaws</li>
+                        <li>Cryptographic weaknesses</li>
+                        <li>Resource leaks and race conditions</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Languages:</strong> JavaScript, Python, Java, C#, C/C++, Go, Ruby</p>
+                </div>
+
+                <div class="security-alert">
+                    <div class="security-title">2. 🛡️ Dependabot Security Updates</div>
+                    <p><strong>What it monitors:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Known vulnerabilities in dependencies (CVEs)</li>
+                        <li>Outdated packages with security fixes</li>
+                        <li>Transitive dependencies (dependencies of dependencies)</li>
+                        <li>Automatic PR creation for security updates</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Coverage:</strong> npm, pip, Maven, NuGet, Composer, and 20+ more</p>
+                </div>
+
+                <div class="security-alert">
+                    <div class="security-title">3. 🔐 Secret Scanning</div>
+                    <p><strong>What it finds:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>API keys, tokens, passwords in code</li>
+                        <li>AWS, Azure, GCP credentials</li>
+                        <li>Database connection strings</li>
+                        <li>Private SSH keys</li>
+                        <li>200+ secret patterns from popular services</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Action:</strong> Automatic alerts and revocation recommendations</p>
+                </div>
+
+                <div class="security-alert">
+                    <div class="security-title">4. 🤖 Copilot Security Suggestions</div>
+                    <p><strong>AI-powered security:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Identifies insecure code patterns</li>
+                        <li>Suggests secure alternatives</li>
+                        <li>Explains security implications</li>
+                        <li>Generates fixes for common vulnerabilities</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Vulnerability Severity Levels & Response:</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Severity</th>
+                            <th>Response Time</th>
+                            <th>Action</th>
+                            <th>Examples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Critical</strong></td>
+                            <td>Immediate (< 4 hours)</td>
+                            <td>Block merge, alert security team, emergency fix</td>
+                            <td>SQL injection, RCE, authentication bypass</td>
+                        </tr>
+                        <tr>
+                            <td><strong>High</strong></td>
+                            <td>24 hours</td>
+                            <td>Block merge, require security review</td>
+                            <td>XSS, CSRF, privilege escalation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Medium</strong></td>
+                            <td>1 week</td>
+                            <td>Warning, must fix before next release</td>
+                            <td>Information disclosure, weak crypto</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Low</strong></td>
+                            <td>30 days</td>
+                            <td>Track in backlog, fix when convenient</td>
+                            <td>Verbose error messages, deprecated APIs</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Automated Remediation Workflow:</h3>
+                <ol>
+                    <li><strong>Detection:</strong> Security scan identifies vulnerability</li>
+                    <li><strong>Classification:</strong> Severity assigned automatically</li>
+                    <li><strong>Notification:</strong> Alert relevant team members</li>
+                    <li><strong>Copilot Fix:</strong> AI suggests remediation code</li>
+                    <li><strong>Testing:</strong> Automated tests verify fix doesn't break functionality</li>
+                    <li><strong>Review:</strong> Security team validates fix for critical/high issues</li>
+                    <li><strong>Deploy:</strong> Merge and deploy fix</li>
+                    <li><strong>Monitor:</strong> Verify vulnerability eliminated in production</li>
+                </ol>
+
+                <div class="code-example">
+# Example: CodeQL Configuration
+# .github/workflows/codeql-analysis.yml
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly scan
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'python' ]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        queries: security-and-quality
+        
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{ matrix.language }}"
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: Security Champions Program</div>
+                    <p><strong>Distribute security responsibility:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Designate Champions:</strong> 1 security-focused developer per team</li>
+                        <li><strong>Training:</strong> Regular security workshops and certifications</li>
+                        <li><strong>Responsibilities:</strong> Review security scan results, assist with remediation, share knowledge</li>
+                        <li><strong>Authority:</strong> Can escalate issues, block unsafe PRs</li>
+                        <li><strong>Recognition:</strong> Career development opportunity, visibility to leadership</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Result:</strong> Security becomes everyone's responsibility, not just the security team's bottleneck</p>
+                </div>
+
+                <div class="tip-box">
+                    <div class="tip-title">🔒 Common Vulnerabilities Copilot Can Fix</div>
+                    <p><strong>Prompt examples for security fixes:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>SQL Injection:</strong> "Convert this raw SQL query to use parameterized queries with placeholders"</li>
+                        <li><strong>XSS:</strong> "Add input sanitization and output encoding to prevent XSS"</li>
+                        <li><strong>CSRF:</strong> "Implement CSRF token validation for this form handler"</li>
+                        <li><strong>Weak Crypto:</strong> "Replace MD5 hashing with bcrypt for password storage"</li>
+                        <li><strong>Path Traversal:</strong> "Add path validation to prevent directory traversal attacks"</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;">Copilot understands security patterns and generates compliant code!</p>
+                </div>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Security Scanning and Remediation</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Setting up CodeQL security scanning</li>
+                    <li>Configuring Dependabot for dependency alerts</li>
+                    <li>Enabling secret scanning with custom patterns</li>
+                    <li>Creating a PR with intentional vulnerabilities</li>
+                    <li>Watching automated security checks detect issues</li>
+                    <li>Using Copilot to generate security fixes</li>
+                    <li>Testing fixes and verifying vulnerability elimination</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> Security vulnerabilities require serious attention. This demonstration shows detection and remediation workflows. Never deploy code with known security issues, even in test environments.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What should happen when a CRITICAL security vulnerability is detected in a PR?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    A) Merge it anyway and fix later
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq3')">
+                    B) Immediately block merge, alert security team, require fix and review before proceeding
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    C) Add it to the backlog for next sprint
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    D) Ignore if tests pass
+                </div>
+                <div id="mcq3" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Security ROI Analysis (2024):</strong> Automated security scanning costs $0.50-2 per scan. Average critical vulnerability fix costs $5,000-15,000 if caught before production. Same vulnerability exploited in production: $100,000-1,000,000+ in damages, remediation, and reputation loss. Prevention ROI: 5,000-500,000x return on investment.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Testing Automation -->
+        <div class="slide">
+            <h2 class="slide-title">4. Testing Automation: Comprehensive Test Generation</h2>
+            <div class="slide-content">
+                <p><strong>Never Ship Untested Code Again</strong></p>
+                <p>Copilot's test generation capabilities ensure comprehensive coverage with minimal manual effort.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Google Testing Research (2024):</strong> AI-generated tests achieve 85-92% coverage vs. 65-75% for manually written tests. Teams using automated test generation write 3.5x more tests in same time, catch 47% more bugs, and reduce production incidents by 41%. Key insight: AI excels at edge case identification that humans often miss.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Google Engineering Productivity Research</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q4')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q4" class="question-answer">
+                        <strong>Q: RetailTech's checkout function has 47 possible execution paths (different payment methods, discounts, errors). Writing tests manually would take 2 days. How can Copilot help?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Copilot test generation strategy:</strong>
+                            <br><br>
+                            <strong>Step 1: Use /tests command</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Select checkout function</li>
+                                <li>Run /tests #selection</li>
+                                <li>Copilot generates comprehensive test suite in 2-3 minutes</li>
+                            </ul>
+                            <br>
+                            <strong>Step 2: Prompt for edge cases</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>"Generate tests for checkout function covering: null cart, zero total, expired promo codes, failed payments, inventory out of stock, concurrent transactions"</li>
+                                <li>Copilot adds 15-20 edge case tests</li>
+                            </ul>
+                            <br>
+                            <strong>Step 3: Integration tests</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>"Create integration tests with Stripe test API and test database"</li>
+                                <li>Copilot generates end-to-end test scenarios</li>
+                            </ul>
+                            <br>
+                            <strong>Result:</strong> 47 execution paths fully tested in 30 minutes vs. 2 days manually. Coverage: 95%+
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Types of Tests Copilot Generates:</h3>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">1. 🧪 Unit Tests</div>
+                    <p><strong>What Copilot creates:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Test individual functions in isolation</li>
+                        <li>Mock external dependencies</li>
+                        <li>Cover happy path and error conditions</li>
+                        <li>Validate return values and side effects</li>
+                        <li>Test boundary conditions and edge cases</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Frameworks:</strong> Jest, Pytest, JUnit, NUnit, Mocha</p>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">2. 🔗 Integration Tests</div>
+                    <p><strong>What Copilot creates:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Test multiple components working together</li>
+                        <li>Use test databases and sandbox APIs</li>
+                        <li>Verify data flow between services</li>
+                        <li>Test error propagation</li>
+                        <li>Validate transaction boundaries</li>
+                    </ul>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">3. 🎭 End-to-End Tests</div>
+                    <p><strong>What Copilot creates:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Complete user workflows</li>
+                        <li>Browser automation (Selenium, Playwright)</li>
+                        <li>API workflow testing</li>
+                        <li>Performance and load scenarios</li>
+                    </ul>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">4. 🐛 Edge Case Tests</div>
+                    <p><strong>Copilot excels at identifying:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Null/undefined inputs</li>
+                        <li>Empty collections</li>
+                        <li>Boundary values (min/max)</li>
+                        <li>Invalid data types</li>
+                        <li>Concurrent access scenarios</li>
+                        <li>Network timeouts and failures</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Test Generation Best Practices:</h3>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: Prompt for Comprehensive Test Coverage</div>
+                    <p><strong>Effective test generation prompts:</strong></p>
+                    <div class="code-example" style="margin-top: 0.5rem; font-size: 0.9rem;">
+// Generate comprehensive tests for checkout function including:
+// - Happy path: successful checkout with various payment methods
+// - Error handling: failed payments, expired cards, insufficient inventory
+// - Edge cases: null cart, zero total, negative amounts
+// - Concurrent scenarios: multiple checkouts of same item
+// - Integration: mock Stripe API, test database
+// - Performance: checkout completes within 2 seconds
+// Use Jest framework with proper mocks and assertions
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Test Coverage Requirements:</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Code Type</th>
+                            <th>Minimum Coverage</th>
+                            <th>Recommended Coverage</th>
+                            <th>Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Payment Processing</strong></td>
+                            <td>95%</td>
+                            <td>98%+</td>
+                            <td>Critical</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security Functions</strong></td>
+                            <td>90%</td>
+                            <td>95%+</td>
+                            <td>Critical</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Business Logic</strong></td>
+                            <td>80%</td>
+                            <td>90%+</td>
+                            <td>High</td>
+                        </tr>
+                        <tr>
+                            <td><strong>API Endpoints</strong></td>
+                            <td>75%</td>
+                            <td>85%+</td>
+                            <td>High</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Utilities/Helpers</strong></td>
+                            <td>70%</td>
+                            <td>80%+</td>
+                            <td>Medium</td>
+                        </tr>
+                        <tr>
+                            <td><strong>UI Components</strong></td>
+                            <td>60%</td>
+                            <td>75%+</td>
+                            <td>Medium</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <div class="tip-title">🚀 Automated Test Enforcement in CI/CD</div>
+                    <div class="code-example" style="margin-top: 0.5rem; font-size: 0.9rem;">
+# Enforce test coverage in GitHub Actions
+- name: Run tests with coverage
+  run: npm test -- --coverage --coverageThreshold='{"global":{"branches":80,"functions":80,"lines":80,"statements":80}}'
+
+- name: Upload coverage to Codecov
+  uses: codecov/codecov-action@v3
+  
+- name: Comment coverage on PR
+  uses: romeovs/lcov-reporter-action@v0.3.1
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    lcov-file: ./coverage/lcov.info
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Automated Test Generation</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Using /tests command to generate unit tests</li>
+                    <li>Prompting Copilot for comprehensive edge case coverage</li>
+                    <li>Creating integration tests with mocked dependencies</li>
+                    <li>Generating end-to-end test scenarios</li>
+                    <li>Setting up test coverage reporting</li>
+                    <li>Enforcing coverage thresholds in CI/CD</li>
+                    <li>Review and refine generated tests for quality</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> While Copilot generates excellent tests, always review them for correctness and completeness. Generated tests are a starting point, not a replacement for thoughtful test design.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the recommended minimum test coverage for payment processing code?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    A) 60% (same as UI components)
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    B) 80% (same as business logic)
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq4')">
+                    C) 95%+ (critical code requires highest coverage)
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    D) 100% (every single line must be tested)
+                </div>
+                <div id="mcq4" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Test Generation Productivity (2024):</strong> Developers using Copilot for test generation write 3.5x more tests per hour. Average time to achieve 80% coverage: Manual = 8-12 hours, With Copilot = 2-3 hours. Quality improvement: AI-generated tests find 47% more edge cases than manual tests.</p>
+            </div>
+        </div>
+
+        <!-- Recap and Next Steps -->
+        <div class="slide">
+            <h2 class="slide-title">Day 4 Recap & Key Takeaways</h2>
+            <div class="slide-content">
+                <h3 style="color: #1e5a96;">What We Covered Today:</h3>
+                <ul>
+                    <li>✅ Automated code review setup and configuration</li>
+                    <li>✅ Pull request automation and enterprise policy management</li>
+                    <li>✅ Security vulnerability detection and remediation</li>
+                    <li>✅ Testing automation: unit, integration, and edge case generation</li>
+                </ul>
+
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <div class="insight-title">🎯 RetailTech Transformation Summary</div>
+                    <p>How automation solved their code review bottleneck:</p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>PR Cycle Time:</strong> 2-3 days → 4-6 hours (5x faster)</li>
+                        <li><strong>Security Vulnerabilities:</strong> +73% detection before production</li>
+                        <li><strong>Test Coverage:</strong> 65% â†' 85%+ (comprehensive automation)</li>
+                        <li><strong>Senior Developer Time:</strong> 6 hours/week reviewing â†' 2 hours/week</li>
+                        <li><strong>Code Quality:</strong> Consistent across all 3 teams</li>
+                        <li><strong>Production Incidents:</strong> -41% due to better testing</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #1e5a96; margin-top: 2rem;">The Automation Stack:</h3>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">PR Cycle Time</div>
+                        <div class="metric-value">4-6h</div>
+                        <p style="color: #4caf50;">↓ 5x faster</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Security Detection</div>
+                        <div class="metric-value">89%</div>
+                        <p style="color: #4caf50;">↑ +73%</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Test Coverage</div>
+                        <div class="metric-value">85%</div>
+                        <p style="color: #4caf50;">↑ +20%</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Production Bugs</div>
+                        <div class="metric-value">-41%</div>
+                        <p style="color: #4caf50;">↓ Reduction</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #1e5a96; margin-top: 2rem;">Implementation Priorities:</h3>
+                <ol>
+                    <li><strong>Week 1:</strong> Enable Copilot PR summaries and basic automated checks</li>
+                    <li><strong>Week 2:</strong> Set up security scanning (CodeQL, Dependabot, secrets)</li>
+                    <li><strong>Week 3:</strong> Implement test automation and coverage requirements</li>
+                    <li><strong>Week 4:</strong> Roll out enterprise policies progressively</li>
+                    <li><strong>Month 2:</strong> Fine-tune policies based on team feedback</li>
+                    <li><strong>Ongoing:</strong> Monitor metrics, adjust thresholds, continuous improvement</li>
+                </ol>
+
+                <h3 style="color: #1e5a96; margin-top: 2rem;">Coming Up - Day 5:</h3>
+                <ul>
+                    <li>⚡ Performance optimization and code efficiency analysis</li>
+                    <li>🚀 Advanced Copilot features: Agents and custom extensions</li>
+                    <li>🏢 Enterprise customization and team collaboration</li>
+                    <li>📊 CI/CD integration and productivity measurement</li>
+                    <li>🎓 Course wrap-up and next steps</li>
+                </ul>
+
+                <div class="warning-box" style="margin-top: 2rem;">
+                    <strong>📚 Homework Assignment:</strong>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Enable automated code review on one test repository</li>
+                        <li>Set up security scanning (CodeQL + Dependabot)</li>
+                        <li>Use /tests to generate tests for 3 functions in your codebase</li>
+                        <li>Create a PR and observe the full automated review workflow</li>
+                        <li>Document what worked well and what needs adjustment</li>
+                    </ul>
+                </div>
+
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <div class="insight-title">💡 Final Thought</div>
+                    <p><strong>"Automation doesn't replace humans. It elevates them."</strong></p>
+                    <p style="margin-top: 0.5rem;">Today you learned that automated code review isn't about removing human judgment from the process. It's about:</p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Catching mechanical issues instantly (formatting, common bugs)</li>
+                        <li>Enforcing security standards consistently</li>
+                        <li>Ensuring comprehensive test coverage</li>
+                        <li>Freeing senior developers to focus on architecture and mentorship</li>
+                        <li>Providing instant feedback to junior developers for faster learning</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;">The result? Higher quality code, happier developers, faster delivery.</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%); color: white; padding: 1.5rem; border-radius: 10px; margin-top: 2rem;">
+                    <h4 style="color: #ff6b35; margin-bottom: 0.5rem;">📊 Day 4 Impact Calculator</h4>
+                    <p>RetailTech's automation ROI (5 developers, 20 PRs/week):</p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Time Saved on Reviews:</strong> 4 hours/developer/week = 20 hours/week</li>
+                        <li><strong>Security Incidents Prevented:</strong> 3-5 per month (avg $50K each) = $150K-250K/month</li>
+                        <li><strong>Production Bugs Avoided:</strong> 41% reduction = 8 fewer incidents/month = 40 hours debugging saved</li>
+                        <li><strong>Faster PR Cycle:</strong> 5x speed = 2.5 extra releases per month</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Setup Cost:</strong> 1 week of configuration</p>
+                    <p><strong>Monthly Value:</strong> $200K+ in prevented issues + 60 hours reclaimed</p>
+                    <p><strong>Annual ROI:</strong> $2.4M+ in value creation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%); color: white; padding: 2rem; border-radius: 15px; text-align: center; margin-top: 3rem;">
+            <h3 style="color: #ff6b35; margin-bottom: 1rem;">Phenomenal Progress! 🎉</h3>
+            <p>Day 4 Complete - You've Mastered Automated Quality Assurance!</p>
+            <p style="margin-top: 1rem;">Tomorrow: Advanced features and tying everything together</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                <strong>Stay SPRY. Stay Smart.</strong>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            answer.classList.toggle('show');
+        }
+
+        function checkAnswer(element, isCorrect, feedbackId) {
+            const options = element.parentElement.getElementsByClassName('mcq-option');
+            for (let option of options) {
+                option.classList.remove('correct', 'incorrect');
+            }
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                showFeedback(feedbackId, true);
+            } else {
+                element.classList.add('incorrect');
+                showFeedback(feedbackId, false);
+            }
+        }
+
+        function showFeedback(feedbackId, isCorrect) {
+            const feedback = document.getElementById(feedbackId);
+            feedback.classList.add('show');
+            
+            if (isCorrect) {
+                feedback.style.background = '#d4edda';
+                feedback.style.color = '#155724';
+                feedback.style.border = '2px solid #28a745';
+                feedback.innerHTML = '✅ Correct! Excellent understanding of automation!';
+            } else {
+                feedback.style.background = '#f8d7da';
+                feedback.style.color = '#721c24';
+                feedback.style.border = '2px solid #dc3545';
+                feedback.innerHTML = '❌ Not quite. Review the automation principles and try again!';
+            }
+        }
+    </script>
+</body>
+</html>

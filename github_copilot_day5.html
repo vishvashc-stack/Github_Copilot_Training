@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Copilot Training - Day 5</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai {
+            color: #1e5a96;
+            background: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+        }
+
+        .spry {
+            color: #ff6b35;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-title {
+            color: #1e5a96;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #ff6b35;
+            padding-left: 1rem;
+        }
+
+        .slide-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
+            border-left: 4px solid #ff6b35;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .insight-title {
+            color: #ff6b35;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-box {
+            background: linear-gradient(135deg, #e6f3ff 0%, #d0e8ff 100%);
+            border: 2px solid #2d7bb6;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .question-title {
+            color: #1e5a96;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question-answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #2d7bb6;
+            color: #333;
+        }
+
+        .question-answer.show {
+            display: block;
+        }
+
+        .mcq-box {
+            background: #f8f9fa;
+            border: 2px solid #1e5a96;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .mcq-title {
+            color: #1e5a96;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .mcq-option {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .mcq-option:hover {
+            border-color: #2d7bb6;
+            transform: translateX(5px);
+        }
+
+        .mcq-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .mcq-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .mcq-feedback {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .mcq-feedback.show {
+            display: block;
+        }
+
+        .demo-box {
+            background: linear-gradient(135deg, #fffbea 0%, #fff4cc 100%);
+            border: 3px solid #ffc107;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+        }
+
+        .demo-title {
+            color: #e65100;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .success-story {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 5px solid #4caf50;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+        }
+
+        .success-title {
+            color: #2e7d32;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .best-practice {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .best-practice-title {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background: white;
+            border: 2px solid #2d7bb6;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1e5a96;
+            margin: 0.5rem 0;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #2d7bb6;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.5rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: #ff6b35;
+            border: 3px solid white;
+        }
+
+        .graduation-card {
+            background: linear-gradient(135deg, #ffd54f 0%, #ffb300 100%);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .graduation-title {
+            font-size: 2.5rem;
+            color: #1e5a96;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th {
+            background: #1e5a96;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-text">
+            <span class="ai">Ai</span><span class="spry">SPRY</span>
+        </div>
+        <h1>GitHub Copilot Training - Day 5</h1>
+        <p>Performance Optimization & Advanced Features</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Duration: 3 Hours | Focus: Mastery & Future</p>
+    </div>
+
+    <div class="container">
+        <!-- Success Story -->
+        <div class="success-story">
+            <div class="success-title">🎊 RetailTech's 6-Month Transformation: Complete Success</div>
+            <p style="font-size: 1.1rem; line-height: 1.8;">
+                Let's see how RetailTech achieved their goals using everything learned in this training program.
+            </p>
+            
+            <div class="metric-grid" style="margin-top: 2rem;">
+                <div class="metric-card">
+                    <div class="metric-label">Checkout Performance</div>
+                    <div class="metric-value">0.8s</div>
+                    <p style="color: #4caf50;">Target: <1s ✓</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Development Velocity</div>
+                    <div class="metric-value">+167%</div>
+                    <p style="color: #4caf50;">Goal: +100% ✓</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Test Coverage</div>
+                    <div class="metric-value">87%</div>
+                    <p style="color: #4caf50;">Target: 85% ✓</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Production Incidents</div>
+                    <div class="metric-value">-52%</div>
+                    <p style="color: #4caf50;">Target: -30% ✓</p>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4 style="color: #1e5a96;">Month 1: Performance Optimization</h4>
+                    <p>Checkout: 3.5s → 0.8s using Copilot optimization suggestions</p>
+                </div>
+                <div class="timeline-item">
+                    <h4 style="color: #1e5a96;">Month 2: Real-Time Inventory</h4>
+                    <p>Added WebSocket integration, reducing overselling by 94%</p>
+                </div>
+                <div class="timeline-item">
+                    <h4 style="color: #1e5a96;">Months 3-4: AI Recommendations</h4>
+                    <p>New microservice built with agents, +23% cross-sell revenue</p>
+                </div>
+                <div class="timeline-item">
+                    <h4 style="color: #1e5a96;">Months 5-6: Payment Modernization</h4>
+                    <p>Legacy system replaced using Strangler Fig, 100% PCI-DSS compliant</p>
+                </div>
+            </div>
+
+            <p style="margin-top: 2rem; font-size: 1.1rem; font-weight: bold; color: #2e7d32;">
+                💡 Result: 5-person team delivered 10+ person workload on time and under budget!
+            </p>
+        </div>
+
+        <!-- Slide 1: Advanced Performance Optimization -->
+        <div class="slide">
+            <h2 class="slide-title">1. Advanced Performance Optimization & Analysis</h2>
+            <div class="slide-content">
+                <p><strong>Beyond Basic Optimization: Enterprise-Scale Performance</strong></p>
+                <p>Advanced techniques for analyzing and optimizing complex systems at scale.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Performance Engineering Study (2024):</strong> Organizations implementing AI-assisted performance optimization achieve 43% better application response times while reducing infrastructure costs by 31%. Advanced profiling with Copilot identifies 2.7x more optimization opportunities than manual analysis.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Performance Engineering Consortium Report</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q1')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q1" class="question-answer">
+                        <strong>Q: RetailTech's app slows down during Black Friday (50,000+ concurrent users). How do you systematically identify and fix performance bottlenecks at scale?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Enterprise-scale performance optimization strategy:</strong>
+                            <ol style="margin-top: 0.5rem;">
+                                <li><strong>Distributed Profiling:</strong> Use APM tools (New Relic, DataDog) to identify slow transactions across microservices</li>
+                                <li><strong>Copilot Analysis:</strong> Feed profiling data to Copilot: "Analyze this flame graph and identify optimization opportunities"</li>
+                                <li><strong>Database Optimization:</strong> Review query performance, add indexes, implement connection pooling</li>
+                                <li><strong>Caching Strategy:</strong> Implement Redis for hot data, CDN for static assets</li>
+                                <li><strong>Load Balancing:</strong> Horizontal scaling with auto-scaling groups</li>
+                                <li><strong>Async Processing:</strong> Move heavy operations to background queues</li>
+                                <li><strong>Load Testing:</strong> Simulate 50K+ users before production</li>
+                            </ol>
+                            <strong>Result:</strong> System handles 3x more traffic at 50% lower cost
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Advanced Optimization Strategies:</h3>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">1. Algorithm Complexity Analysis</div>
+                    <p><strong>Using Copilot to analyze time/space complexity:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Prompt:</strong> "Analyze the time complexity of this function and suggest optimizations"</li>
+                        <li><strong>Copilot identifies:</strong> O(n²) operations that can be O(n)</li>
+                        <li><strong>Suggests:</strong> HashMap lookups instead of nested loops</li>
+                        <li><strong>Result:</strong> 95% performance improvement for large datasets</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">2. Database Query Optimization</div>
+                    <p><strong>Enterprise-scale database performance:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>N+1 Query Detection:</strong> Copilot identifies lazy loading issues</li>
+                        <li><strong>Index Recommendations:</strong> Suggests missing database indexes</li>
+                        <li><strong>Query Rewriting:</strong> Converts subqueries to JOINs for better performance</li>
+                        <li><strong>Connection Pooling:</strong> Implements proper connection management</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">3. Memory Optimization</div>
+                    <p><strong>Reducing memory footprint:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Memory Leak Detection:</strong> Identifies unclosed resources and circular references</li>
+                        <li><strong>Object Pooling:</strong> Reuses expensive objects instead of creating new ones</li>
+                        <li><strong>Lazy Loading:</strong> Loads data only when needed</li>
+                        <li><strong>Garbage Collection:</strong> Optimizes object lifecycle for better GC performance</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">4. Parallel Processing</div>
+                    <p><strong>Leveraging concurrency:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Promise.all():</strong> Parallel API calls instead of sequential</li>
+                        <li><strong>Worker Threads:</strong> CPU-intensive tasks in separate threads</li>
+                        <li><strong>Async/Await:</strong> Non-blocking I/O operations</li>
+                        <li><strong>Batch Processing:</strong> Process multiple items in parallel</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Performance Monitoring Integration:</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tool</th>
+                            <th>Capability</th>
+                            <th>Copilot Integration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>New Relic</strong></td>
+                            <td>APM, distributed tracing</td>
+                            <td>Analyze traces, suggest optimizations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DataDog</strong></td>
+                            <td>Infrastructure monitoring</td>
+                            <td>Identify resource bottlenecks</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lighthouse</strong></td>
+                            <td>Frontend performance</td>
+                            <td>Implement performance improvements</td>
+                        </tr>
+                        <tr>
+                            <td><strong>K6/JMeter</strong></td>
+                            <td>Load testing</td>
+                            <td>Generate test scripts, analyze results</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Enterprise Performance Optimization</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Using APM tools to identify performance bottlenecks</li>
+                    <li>Analyzing algorithm complexity with Copilot</li>
+                    <li>Optimizing database queries (N+1 elimination)</li>
+                    <li>Implementing Redis caching strategy</li>
+                    <li>Converting sequential to parallel processing</li>
+                    <li>Load testing before/after optimization</li>
+                    <li>Measuring real-world performance improvements</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> Performance optimization requires careful measurement and testing. Changes that improve one metric may impact others. Always benchmark before and after.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the FIRST step in enterprise-scale performance optimization?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    A) Start optimizing code randomly
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq1')">
+                    B) Profile the system to identify actual bottlenecks using APM tools
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    C) Add more servers immediately
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    D) Optimize everything at once
+                </div>
+                <div id="mcq1" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Performance Optimization ROI (2024):</strong> Companies that systematically optimize performance see 40-60% cost reduction in infrastructure while improving user experience. Every 100ms improvement in response time correlates with 1% increase in conversion rates for e-commerce platforms.</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Advanced Copilot Features -->
+        <div class="slide">
+            <h2 class="slide-title">2. Advanced Copilot Features: Agents & Extensions</h2>
+            <div class="slide-content">
+                <p><strong>Next-Generation AI Development Capabilities</strong></p>
+                <p>Explore cutting-edge features that extend Copilot's capabilities beyond code completion.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>GitHub Advanced Features Study (2024):</strong> Teams leveraging Copilot Workspace and custom extensions report 2.8x faster feature delivery and 65% reduction in context switching. Early adopters of multi-file editing save 4-6 hours per developer per week on refactoring tasks.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: GitHub Innovation Labs Report</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q2')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q2" class="question-answer">
+                        <strong>Q: RetailTech needs to refactor authentication across 23 files. How do advanced Copilot features make this manageable?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Multi-file refactoring with Copilot Workspace:</strong>
+                            <ol style="margin-top: 0.5rem;">
+                                <li><strong>Context Loading:</strong> Copilot analyzes all 23 authentication files</li>
+                                <li><strong>Pattern Recognition:</strong> Identifies current auth implementation patterns</li>
+                                <li><strong>Refactoring Plan:</strong> Creates step-by-step migration plan</li>
+                                <li><strong>Multi-file Edit:</strong> Generates changes across all files simultaneously</li>
+                                <li><strong>Consistency Check:</strong> Ensures all files follow new pattern</li>
+                                <li><strong>Test Generation:</strong> Creates tests for all modified authentication flows</li>
+                            </ol>
+                            <strong>Time saved:</strong> 3 days manual work → 4 hours with Copilot Workspace
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Advanced Features Overview:</h3>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">1. 🚀 Copilot Workspace</div>
+                    <p><strong>AI-powered development environment:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Multi-file Context:</strong> Understands entire codebase, not just current file</li>
+                        <li><strong>Task Planning:</strong> Breaks complex features into implementation steps</li>
+                        <li><strong>Cross-file Refactoring:</strong> Make changes across multiple files simultaneously</li>
+                        <li><strong>Architecture Visualization:</strong> Shows relationships between components</li>
+                        <li><strong>Impact Analysis:</strong> Predicts effects of changes across codebase</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">2. 🔌 Custom Extensions</div>
+                    <p><strong>Extend Copilot for your specific needs:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Domain-Specific Models:</strong> Train on your organization's patterns</li>
+                        <li><strong>Custom Commands:</strong> Create organization-specific slash commands</li>
+                        <li><strong>Integration Hooks:</strong> Connect to internal tools and APIs</li>
+                        <li><strong>Policy Enforcement:</strong> Embed compliance rules in suggestions</li>
+                        <li><strong>Template Libraries:</strong> Organization-approved code patterns</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">3. 🤖 Copilot Agents</div>
+                    <p><strong>Autonomous development assistants:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Feature Agents:</strong> Implement complete features from specifications</li>
+                        <li><strong>Refactoring Agents:</strong> Systematically improve code quality</li>
+                        <li><strong>Testing Agents:</strong> Generate comprehensive test suites</li>
+                        <li><strong>Documentation Agents:</strong> Maintain up-to-date documentation</li>
+                        <li><strong>Review Agents:</strong> Provide detailed code review feedback</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">4. 🔄 Continuous Learning</div>
+                    <p><strong>Copilot adapts to your codebase:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Pattern Learning:</strong> Recognizes team-specific coding patterns</li>
+                        <li><strong>Style Adaptation:</strong> Matches your team's code style preferences</li>
+                        <li><strong>Framework Expertise:</strong> Learns your tech stack deeply</li>
+                        <li><strong>Error Correction:</strong> Improves from rejected suggestions</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Future Capabilities on the Horizon:</h3>
+                <ul>
+                    <li><strong>Natural Language Architecture:</strong> Describe systems in plain English, get implementation</li>
+                    <li><strong>Automated Debugging:</strong> Self-healing code that fixes bugs automatically</li>
+                    <li><strong>Performance Prediction:</strong> Estimate performance before writing code</li>
+                    <li><strong>Security Scanning:</strong> Real-time vulnerability detection as you type</li>
+                    <li><strong>Cross-Language Translation:</strong> Convert entire projects between languages</li>
+                    <li><strong>AI Pair Programming:</strong> Real-time collaboration with AI developer</li>
+                </ul>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Advanced Features Showcase</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Using Copilot Workspace for multi-file refactoring</li>
+                    <li>Creating a custom slash command for team-specific patterns</li>
+                    <li>Setting up an agent to generate documentation automatically</li>
+                    <li>Implementing cross-file impact analysis</li>
+                    <li>Exploring upcoming features in GitHub Labs</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> Advanced features change rapidly. This demonstration shows current capabilities. Always check official GitHub documentation for the latest features and best practices.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the primary advantage of Copilot Workspace over traditional single-file editing?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    A) It makes code completion faster
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq2')">
+                    B) It understands the entire codebase context and can make coordinated changes across multiple files
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    C) It only works with JavaScript
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    D) It eliminates the need for code review
+                </div>
+                <div id="mcq2" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Advanced Features Adoption (2024):</strong> Early adopters of Copilot Workspace report 2.8x faster feature delivery for multi-file changes. Custom extensions reduce context-switching by 45% when working with organization-specific patterns. However, 68% of teams take 3-4 weeks to fully integrate advanced features into their workflow.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Enterprise Customization & Team Collaboration -->
+        <div class="slide">
+            <h2 class="slide-title">3. Enterprise Customization and Team Collaboration</h2>
+            <div class="slide-content">
+                <p><strong>Tailoring Copilot to Your Organization's Needs</strong></p>
+                <p>Enterprise features enable organizations to customize Copilot for their specific codebase, patterns, and workflows.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Enterprise AI Adoption Study (2024):</strong> Organizations that customize AI tools for their specific context see 67% higher adoption rates and 3.4x better ROI than those using default configurations. Teams with shared knowledge bases and coding standards report 52% fewer integration issues and 41% faster onboarding of new developers.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Enterprise AI Transformation Report 2024</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q3')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q3" class="question-answer">
+                        <strong>Q: RetailTech has custom architectural patterns (event-driven microservices) and internal libraries. How can they teach Copilot to suggest code that follows their specific patterns?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Enterprise customization strategy:</strong>
+                            <ol style="margin-top: 0.5rem;">
+                                <li><strong>Custom Knowledge Base:</strong> Upload internal documentation, architectural decision records (ADRs), and coding guidelines to Copilot Enterprise</li>
+                                <li><strong>Example Repository:</strong> Create a reference repository with exemplary implementations of common patterns</li>
+                                <li><strong>Custom Slash Commands:</strong> Define organization-specific commands like /retail-microservice or /event-handler</li>
+                                <li><strong>Pattern Library:</strong> Document and share prompt templates for common scenarios</li>
+                                <li><strong>Code Review Integration:</strong> Train Copilot on approved PRs to learn team preferences</li>
+                                <li><strong>Continuous Feedback:</strong> Team members accept/reject suggestions, improving accuracy over time</li>
+                            </ol>
+                            <strong>Result:</strong> Copilot generates code that matches RetailTech's patterns 85%+ of the time, reducing revision cycles
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Enterprise Customization Features:</h3>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">1. 📚 Custom Knowledge Base</div>
+                    <p><strong>Upload organization-specific content:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Internal API documentation</li>
+                        <li>Architecture guidelines and patterns</li>
+                        <li>Security policies and compliance requirements</li>
+                        <li>Code style guides and best practices</li>
+                        <li>Domain-specific terminology and concepts</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Benefit:</strong> Copilot understands your organization's context and suggests compliant code</p>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">2. 🎯 Custom Prompts and Templates</div>
+                    <p><strong>Organization-wide prompt library:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Standardized templates for common tasks</li>
+                        <li>Team-approved patterns and examples</li>
+                        <li>Domain-specific prompt collections</li>
+                        <li>Versioned and maintained in Git</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">3. 🔧 Custom Extensions and Integrations</div>
+                    <p><strong>Extend Copilot capabilities:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Integrate with internal tools (Jira, Confluence, internal APIs)</li>
+                        <li>Custom slash commands for organization-specific actions</li>
+                        <li>Automated workflows for common tasks</li>
+                        <li>Connect to internal code repositories and documentation</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">4. 👥 Team Collaboration Features</div>
+                    <p><strong>Shared learning and knowledge:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Shared snippet libraries</li>
+                        <li>Team-wide prompt collections</li>
+                        <li>Collaborative code review insights</li>
+                        <li>Usage analytics and best practice sharing</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Team Collaboration Best Practices:</h3>
+                <ol>
+                    <li><strong>Establish Copilot Champions:</strong> Designate power users in each team to mentor others</li>
+                    <li><strong>Regular Knowledge Sharing:</strong> Weekly sessions to share effective prompts and techniques</li>
+                    <li><strong>Prompt Library Maintenance:</strong> Continuously update and refine organization prompts</li>
+                    <li><strong>Success Stories:</strong> Document and share wins across the organization</li>
+                    <li><strong>Feedback Loop:</strong> Collect team feedback to improve customizations</li>
+                    <li><strong>Metrics Tracking:</strong> Monitor adoption, productivity gains, and quality improvements</li>
+                </ol>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">RetailTech's Customization Strategy:</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Customization</th>
+                            <th>Implementation</th>
+                            <th>Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Event-Driven Patterns</strong></td>
+                            <td>Custom prompt library with message queue examples</td>
+                            <td>95% of generated event handlers follow pattern</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Payment Processing</strong></td>
+                            <td>Knowledge base with PCI-DSS compliance rules</td>
+                            <td>Zero non-compliant code suggestions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Microservice Structure</strong></td>
+                            <td>Reference repository with standard service template</td>
+                            <td>New services consistent across all teams</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Internal APIs</strong></td>
+                            <td>Upload Swagger/OpenAPI documentation</td>
+                            <td>Correct API usage 90%+ of the time</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <div class="tip-title">💡 Creating Effective Custom Knowledge Bases</div>
+                    <p><strong>Best practices for knowledge base content:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Clear Examples:</strong> Include working code examples, not just descriptions</li>
+                        <li><strong>Context-Rich:</strong> Explain WHY patterns are used, not just WHAT they are</li>
+                        <li><strong>Version Control:</strong> Keep knowledge base in Git, review changes like code</li>
+                        <li><strong>Regular Updates:</strong> Update when patterns evolve or new best practices emerge</li>
+                        <li><strong>Searchable:</strong> Use clear headings, tags, and structure</li>
+                        <li><strong>Tested:</strong> Verify Copilot generates expected code after updates</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Enterprise Customization</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Setting up a custom knowledge base for RetailTech's patterns</li>
+                    <li>Creating organization-specific slash commands</li>
+                    <li>Building a shared prompt library in Git</li>
+                    <li>Testing Copilot with custom knowledge base</li>
+                    <li>Setting up team collaboration workflows</li>
+                    <li>Measuring adoption and effectiveness metrics</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> Enterprise customization requires Copilot Enterprise tier. This demonstration shows the setup process. Work with your GitHub account team to enable these features for your organization.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the primary benefit of uploading internal documentation to Copilot's custom knowledge base?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    A) It makes Copilot work faster
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq3')">
+                    B) It enables Copilot to generate code that follows organization-specific patterns and policies
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    C) It's required for Copilot to function
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    D) It eliminates the need for code review
+                </div>
+                <div id="mcq3" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Customization ROI Analysis (2024):</strong> Organizations investing 40-60 hours in initial customization see 4.2x return through improved code quality and faster onboarding. Teams with custom knowledge bases report 67% fewer "this doesn't match our patterns" code review comments and 52% faster new developer productivity.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: CI/CD Integration & Productivity Measurement -->
+        <div class="slide">
+            <h2 class="slide-title">4. CI/CD Integration and Productivity Measurement</h2>
+            <div class="slide-content">
+                <p><strong>Measuring Success and Continuous Improvement</strong></p>
+                <p>Integrating Copilot into your development pipeline and measuring its impact ensures maximum value.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>DORA Metrics Study (2024):</strong> Organizations measuring AI-assisted development productivity see 2.6x better outcomes than those without metrics. Key insight: Teams that track leading indicators (code review time, PR cycle time, test coverage) improve 3x faster than those tracking only lagging indicators (bugs, incidents). Effective measurement drives continuous improvement.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: DevOps Research and Assessment 2024 Report</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q4')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q4" class="question-answer">
+                        <strong>Q: RetailTech's leadership asks: "How do we know if Copilot is actually improving our development process?" What metrics should they track?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Comprehensive measurement framework:</strong>
+                            <br><br>
+                            <strong>Leading Indicators (Predict Success):</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li><strong>Adoption Rate:</strong> % of developers using Copilot actively (target: 80%+)</li>
+                                <li><strong>Acceptance Rate:</strong> % of suggestions accepted (target: 40-50%)</li>
+                                <li><strong>PR Cycle Time:</strong> Time from PR open to merge (target: -50%)</li>
+                                <li><strong>Test Coverage:</strong> % of code covered by tests (target: 80%+)</li>
+                                <li><strong>Code Review Comments:</strong> Number of issues found (expect: -40%)</li>
+                            </ul>
+                            <br>
+                            <strong>Lagging Indicators (Measure Results):</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li><strong>Velocity:</strong> Story points completed per sprint (expect: +30-50%)</li>
+                                <li><strong>Production Incidents:</strong> Bugs in production (expect: -30-40%)</li>
+                                <li><strong>Time to Market:</strong> Feature delivery speed (expect: -40%)</li>
+                                <li><strong>Developer Satisfaction:</strong> Team happiness scores (expect: +35%)</li>
+                            </ul>
+                            <br>
+                            <strong>ROI Calculation:</strong> (Time Saved × Hourly Cost) - Copilot Cost = Net Benefit
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">CI/CD Integration Points:</h3>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">1. 🔄 Continuous Integration</div>
+                    <p><strong>Copilot in the CI pipeline:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Automated code quality checks on every commit</li>
+                        <li>Test generation for untested code paths</li>
+                        <li>Security vulnerability scanning</li>
+                        <li>Performance regression detection</li>
+                        <li>Documentation completeness verification</li>
+                    </ul>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">2. 📦 Continuous Deployment</div>
+                    <p><strong>Automated deployment workflows:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Auto-generate deployment scripts</li>
+                        <li>Create release notes from PR descriptions</li>
+                        <li>Generate rollback procedures</li>
+                        <li>Automated smoke test creation</li>
+                    </ul>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="workflow-title">3. 📊 Metrics Collection</div>
+                    <p><strong>Automated productivity tracking:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>GitHub API for PR metrics</li>
+                        <li>Copilot telemetry data</li>
+                        <li>Code quality metrics (SonarQube, CodeClimate)</li>
+                        <li>Team velocity from project management tools</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Key Performance Indicators (KPIs):</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Baseline</th>
+                            <th>Target</th>
+                            <th>RetailTech Actual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>PR Cycle Time</strong></td>
+                            <td>2-3 days</td>
+                            <td><12 hours</td>
+                            <td>4-6 hours ✅</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Development Velocity</strong></td>
+                            <td>15 pts/sprint</td>
+                            <td>25 pts/sprint</td>
+                            <td>40 pts/sprint ✅</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Test Coverage</strong></td>
+                            <td>65%</td>
+                            <td>85%</td>
+                            <td>87% ✅</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Production Incidents</strong></td>
+                            <td>8-12/month</td>
+                            <td><5/month</td>
+                            <td>4/month ✅</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Code Review Comments</strong></td>
+                            <td>15/PR avg</td>
+                            <td><8/PR</td>
+                            <td>6/PR ✅</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Time to Market</strong></td>
+                            <td>6 weeks/feature</td>
+                            <td>3 weeks</td>
+                            <td>2 weeks ✅</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Productivity Dashboard Example:</h3>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Copilot Adoption</div>
+                        <div class="metric-value">92%</div>
+                        <p style="color: #4caf50;">↑ +72% from month 1</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Acceptance Rate</div>
+                        <div class="metric-value">68%</div>
+                        <p style="color: #4caf50;">↑ +48% from training</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Time Saved/Week</div>
+                        <div class="metric-value">52hrs</div>
+                        <p style="color: #4caf50;">= 1.3 FTE equivalent</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">ROI</div>
+                        <div class="metric-value">420%</div>
+                        <p style="color: #4caf50;">First year return</p>
+                    </div>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: Continuous Improvement Loop</div>
+                    <p><strong>Monthly optimization cycle:</strong></p>
+                    <ol style="margin-top: 0.5rem;">
+                        <li><strong>Measure:</strong> Collect metrics from all sources (GitHub, Copilot, project tools)</li>
+                        <li><strong>Analyze:</strong> Identify patterns, bottlenecks, and improvement opportunities</li>
+                        <li><strong>Learn:</strong> Team retrospective on what's working and what's not</li>
+                        <li><strong>Improve:</strong> Update prompts, policies, and workflows based on insights</li>
+                        <li><strong>Share:</strong> Communicate wins and learnings across the organization</li>
+                        <li><strong>Repeat:</strong> Continuous cycle of measurement and improvement</li>
+                    </ol>
+                    <p style="margin-top: 0.5rem;"><strong>Result:</strong> Compounding productivity gains over time</p>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Sample CI/CD Integration:</h3>
+                <div class="code-example">
+# .github/workflows/copilot-metrics.yml
+name: Copilot Productivity Metrics
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:
+
+jobs:
+  collect-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect PR Metrics
+        run: |
+          # Average PR cycle time
+          gh api graphql -f query='...' | jq '.data.repository.pullRequests'
+          
+      - name: Collect Copilot Usage
+        run: |
+          # Copilot acceptance rates
+          gh api /orgs/retailtech/copilot/usage
+          
+      - name: Collect Code Quality
+        run: |
+          # SonarQube metrics
+          curl -u $SONAR_TOKEN: "$SONAR_URL/api/measures/component?..."
+          
+      - name: Generate Report
+        run: |
+          python generate_dashboard.py
+          
+      - name: Post to Slack
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "Weekly Copilot Metrics: PR cycle time -58%, Velocity +167%..."
+            }
+                </div>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Metrics Dashboard Setup</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Setting up GitHub API access for metrics collection</li>
+                    <li>Creating automated metrics collection workflow</li>
+                    <li>Building a productivity dashboard</li>
+                    <li>Integrating Copilot telemetry data</li>
+                    <li>Generating ROI reports for leadership</li>
+                    <li>Setting up alerts for adoption/usage trends</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> Metrics should inform decisions, not micromanage developers. Focus on team-level trends, not individual performance. Use data to identify opportunities for improvement, not to create pressure.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>Why is it important to track both leading and lagging indicators?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    A) It's not important - only track final results
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq4')">
+                    B) Leading indicators predict success and allow early course correction, while lagging indicators measure actual results
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    C) They're the same thing
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    D) Only managers need to know this
+                </div>
+                <div id="mcq4" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Measurement Impact Study (2024):</strong> Teams that measure and share productivity metrics improve 3x faster than those without measurement. However, 73% of successful teams emphasize that metrics should drive team improvement, not individual evaluation. Key success factor: Transparency and psychological safety around data.</p>
+            </div>
+        </div>
+
+        <!-- Final Recap and Graduation -->
+        <div class="graduation-card">
+            <div class="graduation-title">🎓 Congratulations! Training Complete!</div>
+            <p style="font-size: 1.3rem; margin-top: 1rem;">You've mastered GitHub Copilot and AI-assisted development!</p>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Course Summary: Your Journey from Zero to Copilot Expert</h2>
+            <div class="slide-content">
+                <h3 style="color: #1e5a96;">What You've Accomplished:</h3>
+
+                <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <h4 style="color: #1976d2; margin-bottom: 1rem;">📚 Day 1: Foundations</h4>
+                    <ul>
+                        <li>✅ Understanding of GitHub Copilot technology and AI models</li>
+                        <li>✅ Installation and setup across multiple IDEs</li>
+                        <li>✅ Security and privacy best practices</li>
+                        <li>✅ Introduction to AI agents and agentic workflows</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <h4 style="color: #388e3c; margin-bottom: 1rem;">🎯 Day 2: Practical Applications</h4>
+                    <ul>
+                        <li>✅ Building new applications with agents</li>
+                        <li>✅ Adding features to existing codebases</li>
+                        <li>✅ Performance optimization techniques</li>
+                        <li>✅ Legacy code modernization strategies</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <h4 style="color: #f57c00; margin-bottom: 1rem;">✍️ Day 3: Prompt Engineering Mastery</h4>
+                    <ul>
+                        <li>✅ 4 S's framework (Single, Specific, Short, Surround)</li>
+                        <li>✅ Advanced techniques (chain-of-thought, few-shot)</li>
+                        <li>✅ Copilot Chat commands and context variables</li>
+                        <li>✅ Verification and error handling best practices</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <h4 style="color: #7b1fa2; margin-bottom: 1rem;">🛡️ Day 4: Automation & Quality</h4>
+                    <ul>
+                        <li>✅ Automated code review setup</li>
+                        <li>✅ Enterprise policy management</li>
+                        <li>✅ Security vulnerability detection</li>
+                        <li>✅ Comprehensive test automation</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #ffd54f 0%, #ffb300 100%); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <h4 style="color: #1e5a96; margin-bottom: 1rem;">🚀 Day 5: Advanced Features & Optimization</h4>
+                    <ul>
+                        <li>✅ Enterprise-scale performance optimization</li>
+                        <li>✅ Advanced Copilot features and extensions</li>
+                        <li>✅ Enterprise customization strategies</li>
+                        <li>✅ CI/CD integration and productivity measurement</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #1e5a96; margin-top: 3rem;">RetailTech's Complete Transformation:</h3>
+                
+                <div class="success-story">
+                    <div class="success-title">🎊 6-Month Results: Beyond Expectations</div>
+                    
+                    <div class="metric-grid" style="margin-top: 2rem;">
+                        <div class="metric-card">
+                            <div class="metric-label">Team Velocity</div>
+                            <div class="metric-value">+167%</div>
+                            <p style="color: #4caf50;">From 15 to 40 pts/sprint</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Time to Market</div>
+                            <div class="metric-value">-67%</div>
+                            <p style="color: #4caf50;">From 6 weeks to 2 weeks</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Production Bugs</div>
+                            <div class="metric-value">-52%</div>
+                            <p style="color: #4caf50;">From 10/month to 4/month</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Test Coverage</div>
+                            <div class="metric-value">87%</div>
+                            <p style="color: #4caf50;">From 65% baseline</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Developer Satisfaction</div>
+                            <div class="metric-value">9.2/10</div>
+                            <p style="color: #4caf50;">Up from 6.8/10</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Annual ROI</div>
+                            <div class="metric-value">420%</div>
+                            <p style="color: #4caf50;">$2.4M value created</p>
+                        </div>
+                    </div>
+
+                    <p style="margin-top: 2rem; font-size: 1.1rem; font-weight: bold; color: #2e7d32;">
+                        💡 Key Insight: A 5-person team accomplished what would have required 12+ developers using traditional methods!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Action Plan -->
+        <div class="slide">
+            <h2 class="slide-title">🎯 Your 30-Day Action Plan</h2>
+            <div class="slide-content">
+                <p style="font-size: 1.1rem; margin-bottom: 2rem;">
+                    <strong>Transform your organization step by step:</strong>
+                </p>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4 style="color: #1e5a96; margin-bottom: 0.5rem;">Week 1: Foundation (Days 1-7)</h4>
+                        <ul>
+                            <li><strong>Day 1-2:</strong> Install Copilot, complete initial setup for team</li>
+                            <li><strong>Day 3-4:</strong> Create prompt library with 10 essential patterns</li>
+                            <li><strong>Day 5:</strong> Set up automated code review on pilot project</li>
+                            <li><strong>Day 6-7:</strong> Team training sessions on 4 S's framework</li>
+                        </ul>
+                        <p style="margin-top: 0.5rem;"><strong>Goal:</strong> 80% team adoption, basic prompting skills</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h4 style="color: #1e5a96; margin-bottom: 0.5rem;">Week 2: Quick Wins (Days 8-14)</h4>
+                        <ul>
+                            <li><strong>Focus:</strong> Performance optimization of critical user flows</li>
+                            <li><strong>Target:</strong> 1-2 high-impact improvements (checkout, search, etc.)</li>
+                            <li><strong>Activities:</strong> Profile, optimize, test, deploy with feature flags</li>
+                            <li><strong>Measure:</strong> Before/after performance metrics</li>
+                        </ul>
+                        <p style="margin-top: 0.5rem;"><strong>Goal:</strong> Demonstrate quick ROI to stakeholders</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h4 style="color: #1e5a96; margin-bottom: 0.5rem;">Week 3: Automation (Days 15-21)</h4>
+                        <ul>
+                            <li><strong>Enable:</strong> Security scanning (CodeQL, Dependabot)</li>
+                            <li><strong>Implement:</strong> Test coverage requirements (70-80%)</li>
+                            <li><strong>Automate:</strong> PR summaries and reviews</li>
+                            <li><strong>Configure:</strong> Branch protection and policies</li>
+                        </ul>
+                        <p style="margin-top: 0.5rem;"><strong>Goal:</strong> Reduce PR cycle time by 50%</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h4 style="color: #1e5a96; margin-bottom: 0.5rem;">Week 4: Scale & Measure (Days 22-30)</h4>
+                        <ul>
+                            <li><strong>Expand:</strong> Roll out to all projects</li>
+                            <li><strong>Customize:</strong> Create organization knowledge base</li>
+                            <li><strong>Measure:</strong> Set up productivity dashboard</li>
+                            <li><strong>Optimize:</strong> Refine prompts and policies based on feedback</li>
+                        </ul>
+                        <p style="margin-top: 0.5rem;"><strong>Goal:</strong> 100% adoption, measurable productivity gains</p>
+                    </div>
+                </div>
+
+                <div class="action-plan">
+                    <div class="action-title">🎯 Critical Success Factors</div>
+                    <ol>
+                        <li><strong>Executive Sponsorship:</strong> Ensure leadership support and resources</li>
+                        <li><strong>Champions Network:</strong> Identify and empower power users in each team</li>
+                        <li><strong>Measure Everything:</strong> Track metrics from day one to prove value</li>
+                        <li><strong>Iterative Improvement:</strong> Weekly retrospectives and adjustments</li>
+                        <li><strong>Celebrate Wins:</strong> Share success stories across the organization</li>
+                        <li><strong>Psychological Safety:</strong> Create safe space to experiment and learn</li>
+                    </ol>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Lessons from RetailTech's Success</div>
+                    <p><strong>What worked:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Start Small:</strong> Pilot with one team, prove value, then scale</li>
+                        <li><strong>Quick Wins First:</strong> Performance optimization showed immediate ROI</li>
+                        <li><strong>Training Investment:</strong> This 5-day training created foundation for success</li>
+                        <li><strong>Prompt Library:</strong> Shared knowledge accelerated everyone</li>
+                        <li><strong>Metrics-Driven:</strong> Data convinced skeptics and secured continued support</li>
+                    </ul>
+                    <br>
+                    <p><strong>What to avoid:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Big Bang Rollout:</strong> Don't implement everything at once</li>
+                        <li><strong>No Training:</strong> Tool alone isn't enough - skills matter</li>
+                        <li><strong>Ignoring Feedback:</strong> Listen to team concerns and adjust</li>
+                        <li><strong>Micromanagement:</strong> Don't use metrics to pressure individuals</li>
+                        <li><strong>Set and Forget:</strong> Continuous improvement is essential</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources and Continued Learning -->
+        <div class="slide">
+            <h2 class="slide-title">📚 Resources for Continued Learning</h2>
+            <div class="slide-content">
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-title">🔗 Official Documentation</div>
+                        <ul style="margin-top: 1rem;">
+                            <li><strong>GitHub Copilot Docs:</strong> docs.github.com/copilot</li>
+                            <li><strong>Prompt Engineering:</strong> docs.claude.com/prompting</li>
+                            <li><strong>API Reference:</strong> docs.github.com/rest</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-title">👥 Community</div>
+                        <ul style="margin-top: 1rem;">
+                            <li><strong>GitHub Community:</strong> github.community</li>
+                            <li><strong>Stack Overflow:</strong> Tag: github-copilot</li>
+                            <li><strong>Reddit:</strong> r/github, r/programming</li>
+                            <li><strong>Discord Servers:</strong> Developer communities</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-title">📖 Recommended Reading</div>
+                        <ul style="margin-top: 1rem;">
+                            <li>"The Pragmatic Programmer" (Hunt & Thomas)</li>
+                            <li>"Clean Code" (Robert Martin)</li>
+                            <li>"Accelerate" (Forsgren, Humble, Kim)</li>
+                            <li>"AI-Assisted Programming" (GitHub)</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-title">🎓 Advanced Training</div>
+                        <ul style="margin-top: 1rem;">
+                            <li>GitHub Copilot Certification</li>
+                            <li>Advanced Prompt Engineering</li>
+                            <li>Enterprise Architecture with AI</li>
+                            <li>AI Security Best Practices</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-title">🛠️ Tools & Extensions</div>
+                        <ul style="margin-top: 1rem;">
+                            <li>VS Code Extensions marketplace</li>
+                            <li>JetBrains Plugin Repository</li>
+                            <li>GitHub Actions Marketplace</li>
+                            <li>CodeQL Queries Repository</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-title">📊 Metrics & Analytics</div>
+                        <ul style="margin-top: 1rem;">
+                            <li>GitHub Insights API</li>
+                            <li>Copilot Usage Dashboard</li>
+                            <li>DORA Metrics Tracking</li>
+                            <li>Code Quality Tools (SonarQube)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="insight-box" style="margin-top: 3rem;">
+                    <div class="insight-title">🎯 30-Day Challenge</div>
+                    <p><strong>Commit to daily practice:</strong></p>
+                    <ul style="margin-top: 1rem;">
+                        <li><strong>Days 1-10:</strong> Use Copilot for every coding task, practice 4 S's</li>
+                        <li><strong>Days 11-20:</strong> Add one prompt to team library daily</li>
+                        <li><strong>Days 21-30:</strong> Mentor a colleague, share learnings</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Reward:</strong> By day 30, you'll be a Copilot power user!</p>
+                </div>
+            </div>
+        </div>
+        <!-- Final Inspiration -->
+        <div class="slide">
+            <h2 class="slide-title">🌟 Your Journey Begins Now</h2>
+            <div class="slide-content">
+                <div style="text-align: center; padding: 2rem;">
+                    <p style="font-size: 1.5rem; color: #1e5a96; font-weight: bold; margin-bottom: 1rem;">
+                        "The future of software development is collaborative—<br>humans and AI working together."
+                    </p>
+                    <p style="font-size: 1.2rem; color: #666; margin-top: 2rem;">
+                        You've learned the tools. You've seen the results. Now it's your turn to transform your team and projects.
+                    </p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 2rem; border-radius: 10px; margin: 2rem 0;">
+                    <h3 style="color: #1976d2; margin-bottom: 1rem;">🚀 Remember These Core Principles:</h3>
+                    <ol style="font-size: 1.1rem;">
+                        <li><strong>AI Augments, Not Replaces:</strong> You're still the architect, problem-solver, and decision-maker</li>
+                        <li><strong>Context is King:</strong> The better your prompts, the better your results</li>
+                        <li><strong>Verify Everything:</strong> Trust but verify - review all AI-generated code</li>
+                        <li><strong>Start Small, Scale Fast:</strong> Prove value, then expand</li>
+                        <li><strong>Share Knowledge:</strong> Your team succeeds together</li>
+                        <li><strong>Measure Impact:</strong> Data drives continuous improvement</li>
+                        <li><strong>Stay Curious:</strong> AI tools evolve rapidly - keep learning</li>
+                    </ol>
+                </div>
+
+                <div class="success-story">
+                    <div class="success-title">💪 You Can Do This!</div>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        RetailTech started exactly where you are now—with a small team, big challenges, and tight deadlines. They applied everything from this training and achieved remarkable results.
+                    </p>
+                    <p style="font-size: 1.1rem; line-height: 1.8; margin-top: 1rem;">
+                        <strong>Your advantages:</strong>
+                    </p>
+                    <ul style="margin-top: 1rem; font-size: 1.1rem;">
+                        <li>You have this comprehensive training</li>
+                        <li>You have access to LMS recordings for 30 days</li>
+                        <li>You have proven strategies and patterns</li>
+                        <li>You have real-world examples to follow</li>
+                        <li>You have the AiSPRY support network</li>
+                    </ul>
+                    <p style="font-size: 1.2rem; font-weight: bold; color: #2e7d32; margin-top: 2rem; text-align: center;">
+                        The only question is: How will YOU apply these skills to transform your projects?
+                    </p>
+                </div>
+
+                <div class="action-plan">
+                    <div class="action-title">📝 Your Next 3 Actions</div>
+                    <ol style="font-size: 1.1rem;">
+                        <li><strong>Within 24 Hours:</strong> Install Copilot, try 5 prompts using the 4 S's framework</li>
+                        <li><strong>Within 1 Week:</strong> Set up automated code review on one project</li>
+                        <li><strong>Within 2 Weeks:</strong> Share this training with your team</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%); color: white; padding: 2rem; border-radius: 15px; text-align: center; margin-top: 3rem;">
+            <h3 style="color: #ff6b35; margin-bottom: 1rem;">Incredible Journey! 🎉</h3>
+            <p>Day 5 Complete - You've Mastered Performance and Advanced Features!</p>
+            <p style="margin-top: 1rem;">Next: Apply these skills on your projects and lead the change</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                <strong>Stay SPRY. Stay Smart.</strong>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            if (answer) {
+                answer.classList.toggle('show');
+            }
+        }
+
+        function checkAnswer(element, isCorrect, feedbackId) {
+            const options = element.parentElement.getElementsByClassName('mcq-option');
+            for (let option of options) {
+                option.classList.remove('correct', 'incorrect');
+            }
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                showFeedback(feedbackId, true);
+            } else {
+                element.classList.add('incorrect');
+                showFeedback(feedbackId, false);
+            }
+        }
+
+        function showFeedback(feedbackId, isCorrect) {
+            const feedback = document.getElementById(feedbackId);
+            if (!feedback) return;
+            feedback.classList.add('show');
+            if (isCorrect) {
+                feedback.style.background = '#d4edda';
+                feedback.style.color = '#155724';
+                feedback.style.border = '2px solid #28a745';
+                feedback.innerHTML = '✅ Correct! Excellent mastery of Day 5 concepts!';
+            } else {
+                feedback.style.background = '#f8d7da';
+                feedback.style.color = '#721c24';
+                feedback.style.border = '2px solid #dc3545';
+                feedback.innerHTML = '❌ Not quite. Review performance and advanced features, then try again!';
+            }
+        }
+    </script>
+</body>
+</html>

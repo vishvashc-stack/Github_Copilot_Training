@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Copilot Training - Day 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai {
+            color: #1e5a96;
+            background: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+        }
+
+        .spry {
+            color: #ff6b35;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-title {
+            color: #1e5a96;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #ff6b35;
+            padding-left: 1rem;
+        }
+
+        .slide-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
+            border-left: 4px solid #ff6b35;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .insight-title {
+            color: #ff6b35;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-box {
+            background: linear-gradient(135deg, #e6f3ff 0%, #d0e8ff 100%);
+            border: 2px solid #2d7bb6;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .question-title {
+            color: #1e5a96;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question-answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #2d7bb6;
+            color: #333;
+        }
+
+        .question-answer.show {
+            display: block;
+        }
+
+        .mcq-box {
+            background: #f8f9fa;
+            border: 2px solid #1e5a96;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .mcq-title {
+            color: #1e5a96;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .mcq-option {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .mcq-option:hover {
+            border-color: #2d7bb6;
+            transform: translateX(5px);
+        }
+
+        .mcq-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .mcq-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .mcq-feedback {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .mcq-feedback.show {
+            display: block;
+        }
+
+        .demo-box {
+            background: linear-gradient(135deg, #fffbea 0%, #fff4cc 100%);
+            border: 3px solid #ffc107;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+        }
+
+        .demo-title {
+            color: #e65100;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .business-problem {
+            background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .business-problem h2 {
+            color: #ff6b35;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .pros {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .cons {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th {
+            background: #1e5a96;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        .best-practice {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .best-practice-title {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-text">
+            <span class="ai">Ai</span><span class="spry">SPRY</span>
+        </div>
+        <h1>GitHub Copilot Training - Day 2</h1>
+        <p>Use Cases - Practical Applications</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Duration: 3 Hours | Focus: Real-World Implementation</p>
+    </div>
+
+    <div class="container">
+        <!-- Business Problem Continuation -->
+        <div class="business-problem">
+            <h2>🎯 RetailTech Challenge - Phase 2</h2>
+            <h3 style="margin-top: 1rem;">Today's Mission: Implementation</h3>
+            <p style="margin-top: 1rem; line-height: 1.8;">
+                Yesterday we learned about GitHub Copilot and AI agents. Today, we apply them to RetailTech's specific challenges:
+            </p>
+            <ul style="margin-top: 1rem;">
+                <li><strong>Task 1:</strong> Build a new microservice for AI-powered product recommendations</li>
+                <li><strong>Task 2:</strong> Add real-time inventory tracking to the existing monolith</li>
+                <li><strong>Task 3:</strong> Optimize the checkout process (current load time: 3.5s, target: <1s)</li>
+                <li><strong>Task 4:</strong> Modernize the 8-year-old payment processing module</li>
+            </ul>
+            <p style="margin-top: 1rem; font-weight: bold; color: #ff6b35;">
+                How do we use agents strategically for each scenario?
+            </p>
+        </div>
+
+        <!-- Slide 1: Developing New Applications with Agents -->
+        <div class="slide">
+            <h2 class="slide-title">1. Developing New Applications Using Agents</h2>
+            <div class="slide-content">
+                <p><strong>Building Greenfield Projects with AI Assistance</strong></p>
+                <p>When starting fresh, AI agents can accelerate development dramatically—but require careful oversight to ensure architectural soundness.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>MIT Technology Review (2024):</strong> Teams building new applications with AI agents report 45-65% faster time-to-first-deployment. However, projects with poor initial architecture decisions face 2.5x more refactoring costs later. The key is using agents for implementation while humans drive architecture.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: MIT CSAIL AI-Assisted Development Study</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q1')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q1" class="question-answer">
+                        <strong>Q: RetailTech needs a new recommendation microservice. Should they let agents design the entire architecture, or should human architects lead? Why?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> Human architects must lead for critical reasons:
+                            <ul style="margin-top: 0.5rem;">
+                                <li><strong>Business Context:</strong> Agents don't understand RetailTech's specific scale, traffic patterns, or integration constraints</li>
+                                <li><strong>Strategic Decisions:</strong> Database choice, caching strategy, API design impact the system for years</li>
+                                <li><strong>Cost Implications:</strong> Agents might suggest expensive cloud services without understanding budget constraints</li>
+                                <li><strong>Regulatory Requirements:</strong> GDPR, PCI-DSS compliance needs human judgment</li>
+                            </ul>
+                            <strong>Best Approach:</strong> Architects define structure, patterns, and constraints. Agents implement based on those decisions.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Pros and Cons Analysis:</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4 style="color: #2e7d32; margin-bottom: 1rem;">✅ Advantages</h4>
+                        <ul>
+                            <li><strong>Rapid Scaffolding:</strong> Generate project structure in minutes</li>
+                            <li><strong>Boilerplate Elimination:</strong> CRUD operations, API endpoints automated</li>
+                            <li><strong>Best Practices:</strong> Modern patterns and idioms by default</li>
+                            <li><strong>Documentation:</strong> Auto-generated docs and comments</li>
+                            <li><strong>Testing Coverage:</strong> Comprehensive test generation</li>
+                            <li><strong>Consistency:</strong> Uniform coding style across codebase</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4 style="color: #c62828; margin-bottom: 1rem;">⚠️ Challenges</h4>
+                        <ul>
+                            <li><strong>Over-engineering:</strong> May suggest complex solutions for simple problems</li>
+                            <li><strong>Generic Code:</strong> Lacks business-specific optimizations</li>
+                            <li><strong>Architecture Drift:</strong> Without guidance, inconsistent patterns emerge</li>
+                            <li><strong>Dependency Bloat:</strong> May add unnecessary libraries</li>
+                            <li><strong>Learning Curve:</strong> Team needs to understand generated code</li>
+                            <li><strong>Maintenance:</strong> Future developers must comprehend AI-generated logic</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Best Practices for New Development:</h3>
+                <ol>
+                    <li><strong>Define Architecture First:</strong> Create design documents before coding</li>
+                    <li><strong>Set Clear Constraints:</strong> Specify frameworks, patterns, and standards</li>
+                    <li><strong>Iterative Development:</strong> Build feature-by-feature with validation</li>
+                    <li><strong>Code Review Everything:</strong> Never merge agent code without human review</li>
+                    <li><strong>Test-Driven Approach:</strong> Write test specifications, let agents implement</li>
+                    <li><strong>Documentation Standards:</strong> Require explanations for complex logic</li>
+                </ol>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Building a Recommendation Microservice</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Creating project structure with Copilot</li>
+                    <li>Generating REST API endpoints for recommendations</li>
+                    <li>Implementing collaborative filtering algorithm</li>
+                    <li>Adding database integration (MongoDB)</li>
+                    <li>Creating unit and integration tests</li>
+                    <li>Generating API documentation</li>
+                    <li>Dockerizing the microservice</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> This demonstration shows end-to-end microservice creation. Please observe without coding along. The recorded session will allow you to practice these steps in your own environment.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the most critical human responsibility when using agents for new application development?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    A) Writing all the code manually
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq1')">
+                    B) Defining architecture, constraints, and reviewing all generated code
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    C) Only running tests on the final product
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    D) Accepting all agent suggestions without modification
+                </div>
+                <div id="mcq1" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Developer Survey (2024):</strong> 71% of developers report that agent-generated code quality improves significantly when they provide detailed architectural context upfront. Projects with clear design documents see 40% fewer refactoring iterations compared to ad-hoc development.</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Adding Features to Existing Code -->
+        <div class="slide">
+            <h2 class="slide-title">2. Adding Features to Existing Codebases</h2>
+            <div class="slide-content">
+                <p><strong>Extending Legacy Systems with Context Awareness</strong></p>
+                <p>Adding features to existing code is where GitHub Copilot truly shines—it understands your codebase patterns and maintains consistency.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>GitHub Research (2024):</strong> Copilot's context awareness spans up to 20 open files and can reference patterns from your entire repository. Developers adding features to existing codebases report 55% time savings, with the highest gains in maintaining consistency with existing patterns and API conventions.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: GitHub Copilot Context Study 2024</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q2')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q2" class="question-answer">
+                        <strong>Q: RetailTech needs to add real-time inventory tracking to their 8-year-old monolithic application. What's the biggest risk, and how does Copilot help mitigate it?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Biggest Risk:</strong> Breaking existing functionality by not understanding implicit dependencies and side effects in the legacy code.
+                            <br><br>
+                            <strong>How Copilot Helps:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li><strong>Pattern Recognition:</strong> Copilot learns from existing code structure and suggests consistent implementations</li>
+                                <li><strong>Dependency Analysis:</strong> Can identify related files and functions that need updates</li>
+                                <li><strong>Test Generation:</strong> Creates tests that validate new features don't break old ones</li>
+                                <li><strong>Code Explanation:</strong> Helps understand cryptic legacy code before modifying</li>
+                                <li><strong>Safe Refactoring:</strong> Suggests modernization while maintaining backward compatibility</li>
+                            </ul>
+                            <strong>Critical:</strong> Still requires manual testing and staging validation!
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">How Context Awareness Works:</h3>
+                <ol>
+                    <li><strong>Open Tab Analysis:</strong> Examines all currently open files</li>
+                    <li><strong>Workspace Scanning:</strong> Indexes your project structure</li>
+                    <li><strong>Pattern Learning:</strong> Identifies coding conventions and styles</li>
+                    <li><strong>Import Resolution:</strong> Understands your project's dependencies</li>
+                    <li><strong>Naming Conventions:</strong> Follows your team's naming patterns</li>
+                </ol>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Step-by-Step Approach:</h3>
+                <div style="margin-top: 1rem;">
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">Phase 1: Understanding (Context Building)</h4>
+                    <ul>
+                        <li>Open related files to provide context to Copilot</li>
+                        <li>Use Copilot Chat to explain existing code sections</li>
+                        <li>Identify integration points and dependencies</li>
+                        <li>Document current behavior before changes</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">Phase 2: Planning</h4>
+                    <ul>
+                        <li>Create feature specification document</li>
+                        <li>Map out affected modules and files</li>
+                        <li>Define test cases for validation</li>
+                        <li>Plan rollback strategy</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">Phase 3: Implementation</h4>
+                    <ul>
+                        <li>Use Copilot to generate feature code matching existing patterns</li>
+                        <li>Let agents create comprehensive tests</li>
+                        <li>Validate against specification</li>
+                        <li>Ensure backward compatibility</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">Phase 4: Integration</h4>
+                    <ul>
+                        <li>Feature flags for gradual rollout</li>
+                        <li>Monitor for regressions</li>
+                        <li>A/B testing if applicable</li>
+                        <li>Documentation updates</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: Maximizing Context</div>
+                    <p>Open 5-10 relevant files before asking Copilot for suggestions. Include:</p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Similar existing features (patterns to follow)</li>
+                        <li>Related models and data structures</li>
+                        <li>API endpoints or interfaces you'll integrate with</li>
+                        <li>Utility functions you want to reuse</li>
+                        <li>Test files showing expected behavior</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;">Result: 70% more accurate and consistent suggestions!</p>
+                </div>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Adding Real-Time Inventory Tracking</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Analyzing existing inventory management code</li>
+                    <li>Using Copilot Chat to understand legacy patterns</li>
+                    <li>Adding WebSocket support for real-time updates</li>
+                    <li>Implementing event-driven inventory notifications</li>
+                    <li>Maintaining backward compatibility with existing API</li>
+                    <li>Creating integration tests for new functionality</li>
+                    <li>Adding feature flags for safe deployment</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> This is a complex integration demonstration. Please observe the complete workflow without attempting to code along. You'll be able to practice with the recorded module.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the primary advantage of opening multiple related files when adding features to existing code?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    A) It makes your IDE run faster
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq2')">
+                    B) It provides Copilot with context to generate consistent, pattern-matching code
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    C) It's required for Copilot to function
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    D) It has no impact on suggestion quality
+                </div>
+                <div id="mcq2" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Context Effectiveness Study (2024):</strong> Copilot's suggestion acceptance rate increases from 30% (with minimal context) to 52% (with 10+ relevant files open). Teams that systematically provide context report 43% fewer bugs in new features.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Performance Optimization -->
+        <div class="slide">
+            <h2 class="slide-title">3. Performance Optimization of Existing Code</h2>
+            <div class="slide-content">
+                <p><strong>Identifying and Fixing Performance Bottlenecks</strong></p>
+                <p>GitHub Copilot can analyze code for performance issues and suggest optimizations based on modern best practices and algorithmic improvements.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Stanford Performance Lab (2024):</strong> AI-assisted performance optimization identifies 3.2x more bottlenecks than manual code review alone. Teams using AI tools for optimization report average performance improvements of 40-60% with median optimization time reduced from 2 weeks to 3-4 days per module.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Stanford Computer Systems Laboratory</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q3')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q3" class="question-answer">
+                        <strong>Q: RetailTech's checkout process takes 3.5 seconds (target: <1 second). Their team suspects database queries and API calls. How can Copilot help diagnose and fix this systematically?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> Systematic optimization approach with Copilot:
+                            <ol style="margin-top: 0.5rem;">
+                                <li><strong>Profiling First:</strong> Use Copilot to generate profiling code to measure actual bottlenecks</li>
+                                <li><strong>Query Analysis:</strong> Ask Copilot to review database queries for N+1 problems, missing indexes, or inefficient joins</li>
+                                <li><strong>Caching Strategy:</strong> Let Copilot suggest Redis caching for frequently accessed data</li>
+                                <li><strong>API Optimization:</strong> Copilot can identify sequential API calls that could be parallelized</li>
+                                <li><strong>Algorithm Review:</strong> Analyze business logic for O(n²) algorithms that could be O(n) or O(log n)</li>
+                                <li><strong>Code Generation:</strong> Implement optimized versions with proper async/await patterns</li>
+                            </ol>
+                            <strong>Critical:</strong> Always benchmark before and after! Don't optimize without measuring.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Common Performance Issues Copilot Can Help Fix:</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Performance Issue</th>
+                            <th>How Copilot Helps</th>
+                            <th>Typical Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>N+1 Query Problem</strong></td>
+                            <td>Suggests eager loading and batch queries</td>
+                            <td>70-95% reduction in DB calls</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inefficient Loops</strong></td>
+                            <td>Recommends better algorithms and data structures</td>
+                            <td>50-90% execution time reduction</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Missing Caching</strong></td>
+                            <td>Suggests caching strategies (Redis, in-memory)</td>
+                            <td>80-99% response time improvement</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Synchronous Operations</strong></td>
+                            <td>Converts to async/await or parallel execution</td>
+                            <td>40-80% faster for I/O operations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inefficient Data Structures</strong></td>
+                            <td>Recommends HashMap vs Array, Set vs List</td>
+                            <td>10-100x lookup speed improvements</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Memory Leaks</strong></td>
+                            <td>Identifies unclosed resources and references</td>
+                            <td>Prevents crashes and slowdowns</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Optimization Workflow:</h3>
+                <ol>
+                    <li><strong>Measure Baseline:</strong> Profile current performance with metrics</li>
+                    <li><strong>Identify Bottlenecks:</strong> Use Copilot to analyze slow sections</li>
+                    <li><strong>Generate Solutions:</strong> Ask for optimization suggestions</li>
+                    <li><strong>Implement Changes:</strong> Apply optimizations incrementally</li>
+                    <li><strong>Test Impact:</strong> Validate improvements with benchmarks</li>
+                    <li><strong>Monitor Production:</strong> Track real-world performance</li>
+                </ol>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: Effective Optimization Prompts</div>
+                    <p>Instead of: "Make this faster"</p>
+                    <p style="margin-top: 0.5rem;"><strong>Try:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>"This function processes 10,000 items and takes 5 seconds. How can I optimize it?"</li>
+                        <li>"Find N+1 query problems in this code and suggest batch loading"</li>
+                        <li>"This API call happens in a loop. How can I parallelize or batch it?"</li>
+                        <li>"Suggest caching strategy for this frequently-called method"</li>
+                        <li>"Replace this O(n²) algorithm with a more efficient approach"</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Specificity = Better results!</strong></p>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Common Optimization Patterns:</h3>
+                <div style="margin-top: 1rem;">
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">Database Optimizations</h4>
+                    <ul>
+                        <li>Eager loading to prevent N+1 queries</li>
+                        <li>Query result caching</li>
+                        <li>Database index recommendations</li>
+                        <li>Connection pooling</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">Algorithm Improvements</h4>
+                    <ul>
+                        <li>Better time complexity (O(n²) → O(n log n))</li>
+                        <li>Appropriate data structures (Map instead of Array for lookups)</li>
+                        <li>Memoization for recursive functions</li>
+                        <li>Lazy evaluation when appropriate</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">Async/Concurrency</h4>
+                    <ul>
+                        <li>Converting sequential to parallel operations</li>
+                        <li>Promise.all() for multiple API calls</li>
+                        <li>Worker threads for CPU-intensive tasks</li>
+                        <li>Debouncing and throttling for UI events</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Optimizing Checkout Performance</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Setting up performance profiling with Copilot</li>
+                    <li>Identifying N+1 query problems in checkout flow</li>
+                    <li>Implementing Redis caching for product data</li>
+                    <li>Parallelizing payment gateway and inventory API calls</li>
+                    <li>Optimizing database queries with proper indexes</li>
+                    <li>Before/after performance comparison (3.5s → 0.8s)</li>
+                    <li>Creating performance regression tests</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> Performance optimization requires careful measurement and testing. Observe the complete methodology without attempting to replicate during the session. Practice with the recorded module in a test environment.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What should be the FIRST step before optimizing code with Copilot?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    A) Rewrite everything from scratch
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq3')">
+                    B) Profile and measure current performance to identify real bottlenecks
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    C) Add caching everywhere
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    D) Ask Copilot to optimize without providing context
+                </div>
+                <div id="mcq3" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Performance Optimization ROI (2024):</strong> Companies report that 20% of code typically accounts for 80% of performance issues. AI-assisted profiling helps identify this critical 20% in 1/3 the time, leading to faster ROI on optimization efforts.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Legacy Code Integration & Modernization -->
+        <div class="slide">
+            <h2 class="slide-title">4. Legacy Code Integration and Modernization</h2>
+            <div class="slide-content">
+                <p><strong>Breathing New Life into Old Systems</strong></p>
+                <p>Legacy code modernization is one of the most challenging and highest-value applications of AI-assisted development.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Gartner Legacy Modernization Report (2024):</strong> 85% of enterprise applications are over 5 years old, with 40% over 10 years. AI-assisted modernization reduces migration time by 50-70% and reduces errors by 60% compared to manual rewrites. The global technical debt is estimated at $1.52 trillion.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Gartner Technical Debt and Modernization Study</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q4')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q4" class="question-answer">
+                        <strong>Q: RetailTech's 8-year-old payment module uses deprecated APIs and has zero documentation. What's the safest modernization strategy using Copilot?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> Safe modernization approach (Strangler Fig Pattern):
+                            <ol style="margin-top: 0.5rem;">
+                                <li><strong>Documentation First:</strong> Use Copilot to analyze and document existing payment logic</li>
+                                <li><strong>Extract Business Rules:</strong> Let Copilot identify core business logic vs infrastructure code</li>
+                                <li><strong>Create Test Harness:</strong> Generate comprehensive tests that capture current behavior</li>
+                                <li><strong>Build New Alongside Old:</strong> Create modern payment service that mirrors functionality</li>
+                                <li><strong>Parallel Running:</strong> Run both systems simultaneously, comparing outputs</li>
+                                <li><strong>Gradual Migration:</strong> Switch traffic incrementally (1% → 10% → 50% → 100%)</li>
+                                <li><strong>Validate PCI Compliance:</strong> Human review of security-critical sections</li>
+                                <li><strong>Decommission Old:</strong> Only after 30+ days of stable new system</li>
+                            </ol>
+                            <strong>Never:</strong> Big-bang rewrites of payment systems! Too risky.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Modernization Strategies:</h3>
+                <div style="margin-top: 1rem;">
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">1. Strangler Fig Pattern (Recommended)</h4>
+                    <ul>
+                        <li>Build new system alongside old one</li>
+                        <li>Gradually migrate functionality</li>
+                        <li>Minimal risk, incremental progress</li>
+                        <li><strong>Copilot helps:</strong> Generate new code, create adapters, maintain consistency</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">2. Façade Pattern</h4>
+                    <ul>
+                        <li>Create modern API wrapper around legacy code</li>
+                        <li>Internal refactoring without external impact</li>
+                        <li>Good for APIs with many consumers</li>
+                        <li><strong>Copilot helps:</strong> Generate façade layer, API documentation</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">3. Microservices Extraction</h4>
+                    <ul>
+                        <li>Extract bounded contexts from monolith</li>
+                        <li>Independent deployment and scaling</li>
+                        <li>Requires careful service boundary definition</li>
+                        <li><strong>Copilot helps:</strong> Identify service boundaries, generate microservice scaffolding</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">4. Incremental Refactoring</h4>
+                    <ul>
+                        <li>Improve code quality with each change</li>
+                        <li>"Boy Scout Rule" - leave code better than you found it</li>
+                        <li>Low risk, continuous improvement</li>
+                        <li><strong>Copilot helps:</strong> Suggest modern patterns, refactor code sections</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Common Legacy Challenges & Solutions:</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Challenge</th>
+                            <th>Copilot Solution</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>No Documentation</strong></td>
+                            <td>Auto-generate docs from code analysis</td>
+                            <td>Ask: "Explain what this class does and document all methods"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deprecated APIs</strong></td>
+                            <td>Suggest modern equivalents</td>
+                            <td>"Update this Java 6 code to Java 17 features"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>No Tests</strong></td>
+                            <td>Generate test coverage</td>
+                            <td>"Create unit tests for this legacy service"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tightly Coupled Code</strong></td>
+                            <td>Suggest decoupling patterns</td>
+                            <td>"Refactor this to use dependency injection"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security Vulnerabilities</strong></td>
+                            <td>Identify and fix security issues</td>
+                            <td>"Check this code for SQL injection vulnerabilities"</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: Understanding Before Modernizing</div>
+                    <p><strong>Critical Steps:</strong></p>
+                    <ol style="margin-top: 0.5rem;">
+                        <li>Use Copilot Chat to explain complex legacy functions</li>
+                        <li>Ask "What are the side effects of this code?"</li>
+                        <li>Request "Identify all dependencies of this module"</li>
+                        <li>Generate flow diagrams: "Create a flowchart of this process"</li>
+                        <li>Find edge cases: "What edge cases does this code handle?"</li>
+                    </ol>
+                    <p style="margin-top: 0.5rem;"><strong>Never modernize what you don't understand!</strong></p>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Modernization Checklist:</h3>
+                <ul>
+                    <li>☑️ Comprehensive tests for current behavior (characterization tests)</li>
+                    <li>☑️ Documentation of business logic and rules</li>
+                    <li>☑️ Identification of all integration points</li>
+                    <li>☑️ Security audit of legacy code</li>
+                    <li>☑️ Performance baseline measurements</li>
+                    <li>☑️ Rollback plan and feature flags</li>
+                    <li>☑️ Staged rollout strategy (not big-bang)</li>
+                    <li>☑️ Monitoring and alerting for new system</li>
+                </ul>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Modernizing Payment Module</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Using Copilot to document undocumented legacy payment code</li>
+                    <li>Generating characterization tests for current behavior</li>
+                    <li>Creating a modern payment service façade</li>
+                    <li>Updating deprecated Stripe API v2 to v3</li>
+                    <li>Implementing adapter pattern for backward compatibility</li>
+                    <li>Adding comprehensive error handling and logging</li>
+                    <li>Security review with Copilot (PCI-DSS considerations)</li>
+                    <li>Setting up parallel running with feature flags</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> This demonstration involves critical payment processing code. Please observe carefully to understand the safety measures and validation steps. Do not attempt payment system modifications without proper security review.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the Strangler Fig Pattern in legacy modernization?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    A) Deleting all old code and starting fresh
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq4')">
+                    B) Building a new system alongside the old one and gradually migrating functionality
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    C) Commenting out legacy code without replacement
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    D) Making all changes in one big deployment
+                </div>
+                <div id="mcq4" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Migration Success Rates (2024):</strong> Strangler Fig Pattern modernizations have a 78% success rate vs. 34% for big-bang rewrites. AI-assisted strangler migrations complete 2.3x faster with 60% fewer production incidents.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Use Case Comparison -->
+        <div class="slide">
+            <h2 class="slide-title">5. Use Case Comparison: When to Use Which Approach</h2>
+            <div class="slide-content">
+                <p><strong>Strategic Decision Making for Different Scenarios</strong></p>
+                <p>Not all problems require the same solution. Understanding when to use agents for greenfield vs. legacy vs. optimization is crucial.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Project Success Analysis (2024):</strong> Teams that match AI strategy to project type see 2.7x better outcomes. Mismatched approaches (e.g., using greenfield strategies on legacy systems) result in 45% project delays and 3x cost overruns. Strategic tool selection is as important as the tools themselves.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Project Management Institute AI Development Study</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q5')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q5" class="question-answer">
+                        <strong>Q: RetailTech has budget for ONE major initiative this quarter. They can either: (A) Build new AI recommendation engine, (B) Optimize checkout performance, or (C) Modernize payment module. Which should they prioritize and why?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> <strong>Recommendation: (B) Optimize checkout performance</strong>
+                            <br><br>
+                            <strong>Rationale:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li><strong>Immediate Revenue Impact:</strong> Every 100ms delay = 1% conversion drop. Going from 3.5s to <1s could increase revenue by 15-25%</li>
+                                <li><strong>Customer Retention:</strong> Slow checkout is #2 reason for cart abandonment</li>
+                                <li><strong>Fastest ROI:</strong> 2-3 weeks to optimize vs. 2-3 months for new features</li>
+                                <li><strong>Low Risk:</strong> Optimization doesn't add complexity, just improves existing flows</li>
+                                <li><strong>Foundation for Growth:</strong> Must have fast checkout before adding features</li>
+                            </ul>
+                            <strong>Then:</strong> (A) recommendations for growth, (C) payment modernization for security/compliance
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Decision Matrix:</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Scenario</th>
+                            <th>Best Approach</th>
+                            <th>Copilot Role</th>
+                            <th>Timeline</th>
+                            <th>Risk Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>New Feature (Greenfield)</strong></td>
+                            <td>Agent-driven development</td>
+                            <td>Generate code, tests, docs</td>
+                            <td>1-2 weeks</td>
+                            <td>Low-Medium</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Add to Existing</strong></td>
+                            <td>Context-aware assistance</td>
+                            <td>Match patterns, maintain consistency</td>
+                            <td>3-7 days</td>
+                            <td>Low</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance Issues</strong></td>
+                            <td>Analysis-driven optimization</td>
+                            <td>Identify bottlenecks, suggest fixes</td>
+                            <td>1-3 weeks</td>
+                            <td>Medium</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Legacy Modernization</strong></td>
+                            <td>Strangler Fig + incremental</td>
+                            <td>Document, test, refactor gradually</td>
+                            <td>2-6 months</td>
+                            <td>High</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bug Fixes</strong></td>
+                            <td>Analysis + targeted fixes</td>
+                            <td>Identify root cause, suggest solution</td>
+                            <td>Hours-Days</td>
+                            <td>Low-Medium</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security Vulnerability</strong></td>
+                            <td>Human-led with AI assistance</td>
+                            <td>Identify issues, validate fixes</td>
+                            <td>1-5 days</td>
+                            <td>Critical</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Effort vs. Value Analysis:</h3>
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+                    <h4 style="color: #2d7bb6;">High Value, Low Effort (Do First)</h4>
+                    <ul>
+                        <li>Performance optimization of critical paths</li>
+                        <li>Adding small features to existing code</li>
+                        <li>Generating missing tests and documentation</li>
+                        <li>Bug fixes with clear reproduction</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1rem;">High Value, High Effort (Plan Carefully)</h4>
+                    <ul>
+                        <li>Legacy system modernization</li>
+                        <li>Major architectural changes</li>
+                        <li>Security infrastructure updates</li>
+                        <li>Large greenfield projects</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1rem;">Low Value, Low Effort (Nice to Have)</h4>
+                    <ul>
+                        <li>Code formatting and style improvements</li>
+                        <li>Minor refactoring without performance impact</li>
+                        <li>Documentation updates for internal tools</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1rem;">Low Value, High Effort (Avoid)</h4>
+                    <ul>
+                        <li>Premature optimization</li>
+                        <li>Rewriting working code for "cleanliness"</li>
+                        <li>Over-engineering simple solutions</li>
+                    </ul>
+                </div>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: ROI-Driven Prioritization</div>
+                    <p>Ask these questions before starting any AI-assisted project:</p>
+                    <ol style="margin-top: 0.5rem;">
+                        <li><strong>Business Impact:</strong> What revenue/cost problem does this solve?</li>
+                        <li><strong>Risk Assessment:</strong> What happens if this goes wrong?</li>
+                        <li><strong>Reversibility:</strong> Can we roll back if needed?</li>
+                        <li><strong>Dependencies:</strong> What else must work first?</li>
+                        <li><strong>Timeline:</strong> Is the effort worth the gain?</li>
+                    </ol>
+                    <p style="margin-top: 0.5rem;"><strong>Focus on high-impact, low-risk improvements first!</strong></p>
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>Which scenario typically has the LOWEST risk when using GitHub Copilot?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq5')">
+                    A) Modernizing a legacy payment processing system
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq5')">
+                    B) Adding a new feature to well-tested existing code
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq5')">
+                    C) Rewriting the entire database layer
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq5')">
+                    D) Changing core authentication logic
+                </div>
+                <div id="mcq5" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Project Failure Analysis (2024):</strong> 62% of failed AI-assisted projects were high-risk initiatives (legacy modernization, security changes) attempted without proper planning. Successful teams start with low-risk, high-value projects to build confidence and expertise.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Real-World RetailTech Implementation Plan -->
+        <div class="slide">
+            <h2 class="slide-title">6. Putting It All Together: RetailTech Implementation Plan</h2>
+            <div class="slide-content">
+                <p><strong>A Strategic Roadmap for the Next 6 Months</strong></p>
+                <p>Let's create a concrete, actionable plan for RetailTech using everything we've learned.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Agile AI Development Study (2024):</strong> Teams that adopt AI tools incrementally (starting with 1-2 use cases) achieve 89% adoption rates vs. 34% for all-at-once rollouts. Phased adoption allows teams to build expertise, establish best practices, and demonstrate value progressively.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Agile Alliance AI Integration Report</em></p>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">6-Month Implementation Roadmap:</h3>
+                
+                <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #2196f3;">
+                    <h4 style="color: #1976d2; margin-bottom: 0.5rem;">Month 1: Foundation & Quick Wins</h4>
+                    <p><strong>Focus: Performance Optimization (Checkout)</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Week 1:</strong> Team training (this course!), tool setup, establish workflows</li>
+                        <li><strong>Week 2:</strong> Profile checkout process, identify bottlenecks</li>
+                        <li><strong>Week 3:</strong> Implement optimizations (caching, query optimization, async calls)</li>
+                        <li><strong>Week 4:</strong> Testing, feature flags, phased rollout to 10% of users</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Expected Outcome:</strong> Real-time stock updates | Reduced overselling | Improved customer satisfaction</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #4caf50;">
+                    <h4 style="color: #388e3c; margin-bottom: 0.5rem;">Month 3-4: Greenfield Development</h4>
+                    <p><strong>Focus: AI-Powered Recommendation Microservice</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Weeks 1-2:</strong> Architecture design, API contracts, data model</li>
+                        <li><strong>Weeks 3-4:</strong> Implement collaborative filtering engine with Copilot</li>
+                        <li><strong>Weeks 5-6:</strong> Integration with existing platform, A/B testing setup</li>
+                        <li><strong>Weeks 7-8:</strong> Training ML models, performance tuning, production deployment</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Expected Outcome:</strong> Personalized recommendations | 15-25% increase in cross-sell | New revenue stream</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #ff9800;">
+                    <h4 style="color: #f57c00; margin-bottom: 0.5rem;">Month 5-6: Legacy Modernization</h4>
+                    <p><strong>Focus: Payment Processing Module (Strangler Fig)</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Weeks 1-2:</strong> Document legacy code, generate characterization tests</li>
+                        <li><strong>Weeks 3-4:</strong> Build new payment service with modern API</li>
+                        <li><strong>Weeks 5-6:</strong> Parallel running (1% → 10% → 25% traffic)</li>
+                        <li><strong>Weeks 7-8:</strong> Complete migration (100%), decommission legacy</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Expected Outcome:</strong> PCI-DSS compliant | Modern API support | Reduced maintenance costs</p>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Success Metrics & KPIs:</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Baseline</th>
+                            <th>Target (6 months)</th>
+                            <th>Measurement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Checkout Performance</strong></td>
+                            <td>3.5 seconds</td>
+                            <td><1 second</td>
+                            <td>APM tools (New Relic, DataDog)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Conversion Rate</strong></td>
+                            <td>2.8%</td>
+                            <td>3.5%+</td>
+                            <td>Google Analytics</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Development Velocity</strong></td>
+                            <td>15 story points/sprint</td>
+                            <td>25 story points/sprint</td>
+                            <td>JIRA metrics</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Code Quality</strong></td>
+                            <td>65% test coverage</td>
+                            <td>85% test coverage</td>
+                            <td>SonarQube</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Production Incidents</strong></td>
+                            <td>8-12 per month</td>
+                            <td><5 per month</td>
+                            <td>PagerDuty/incident logs</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Time to Market</strong></td>
+                            <td>6 weeks (average feature)</td>
+                            <td>2-3 weeks</td>
+                            <td>Project tracking</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="best-practice">
+                    <div class="best-practice-title">💎 Pro Tip: Building Team Confidence</div>
+                    <p><strong>Start small, prove value, then scale:</strong></p>
+                    <ol style="margin-top: 0.5rem;">
+                        <li><strong>Week 1:</strong> Simple tasks (documentation, test generation)</li>
+                        <li><strong>Week 2-3:</strong> Small features with high value (performance optimization)</li>
+                        <li><strong>Month 2:</strong> Medium complexity (new features)</li>
+                        <li><strong>Month 3+:</strong> Complex projects (greenfield, modernization)</li>
+                    </ol>
+                    <p style="margin-top: 0.5rem;">Each success builds confidence and skills for the next challenge!</p>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Risk Mitigation Strategies:</h3>
+                <ul>
+                    <li><strong>Feature Flags:</strong> All major changes behind toggles for instant rollback</li>
+                    <li><strong>Canary Deployments:</strong> 1% → 10% → 50% → 100% rollout pattern</li>
+                    <li><strong>Monitoring:</strong> Real-time alerting for performance degradation</li>
+                    <li><strong>Code Review:</strong> 100% of AI-generated code reviewed by humans</li>
+                    <li><strong>Staging Environment:</strong> Test everything before production</li>
+                    <li><strong>Documentation:</strong> Maintain decision logs and architectural records</li>
+                </ul>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Month 1 Kickoff Simulation</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Setting up project tracking and KPIs in JIRA</li>
+                    <li>Creating the first sprint plan for checkout optimization</li>
+                    <li>Setting up monitoring and baseline measurements</li>
+                    <li>Conducting initial performance profiling session</li>
+                    <li>First team standup using AI-assisted development</li>
+                    <li>Code review workflow with Copilot-generated code</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> This simulation shows complete project setup and workflow. Observe the organizational aspects as much as the technical implementation. These patterns ensure successful AI adoption.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>Why should RetailTech start with performance optimization rather than the new recommendation engine?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq6')">
+                    A) Performance optimization is easier than new development
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq6')">
+                    B) It provides immediate ROI, builds team confidence, and creates a solid foundation for new features
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq6')">
+                    C) New features should never be prioritized
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq6')">
+                    D) Recommendations don't generate revenue
+                </div>
+                <div id="mcq6" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Implementation Success Factors (2024):</strong> Teams following phased rollout strategies have 91% success rates vs. 47% for big-bang approaches. Early wins in months 1-2 create momentum and executive support for longer-term modernization efforts.</p>
+            </div>
+        </div>
+
+        <!-- Recap and Next Steps -->
+        <div class="slide">
+            <h2 class="slide-title">Day 2 Recap & Key Takeaways</h2>
+            <div class="slide-content">
+                <h3 style="color: #1e5a96;">What We Covered Today:</h3>
+                <ul>
+                    <li>✅ Developing new applications with agents (pros and cons)</li>
+                    <li>✅ Adding features to existing codebases with context awareness</li>
+                    <li>✅ Performance optimization strategies and techniques</li>
+                    <li>✅ Legacy code integration and modernization approaches</li>
+                    <li>✅ Use case comparison and strategic decision making</li>
+                    <li>✅ Comprehensive 6-month implementation plan for RetailTech</li>
+                </ul>
+
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <div class="insight-title">🎯 RetailTech Progress Summary</div>
+                    <p>We've created a complete roadmap that addresses all their challenges:</p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Month 1:</strong> Checkout optimization → Immediate revenue impact</li>
+                        <li><strong>Month 2:</strong> Real-time inventory → Customer satisfaction</li>
+                        <li><strong>Months 3-4:</strong> Recommendations engine → New revenue streams</li>
+                        <li><strong>Months 5-6:</strong> Payment modernization → Security & compliance</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Result:</strong> Small team delivers 10x value in 6 months!</p>
+                </div>
+
+                <h3 style="color: #1e5a96; margin-top: 2rem;">Critical Success Factors:</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4 style="color: #2e7d32; margin-bottom: 1rem;">✅ Do These</h4>
+                        <ul>
+                            <li>Start with high-value, low-risk projects</li>
+                            <li>Provide rich context to Copilot</li>
+                            <li>Review all AI-generated code</li>
+                            <li>Measure performance before and after</li>
+                            <li>Use feature flags and phased rollouts</li>
+                            <li>Build team skills progressively</li>
+                            <li>Document decisions and learnings</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4 style="color: #c62828; margin-bottom: 1rem;">❌ Avoid These</h4>
+                        <ul>
+                            <li>Big-bang rewrites without testing</li>
+                            <li>Accepting suggestions without understanding</li>
+                            <li>Skipping code review for speed</li>
+                            <li>Optimizing without measuring</li>
+                            <li>Modernizing payment/security without care</li>
+                            <li>Starting with complex legacy projects</li>
+                            <li>Ignoring team training and onboarding</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color: #1e5a96; margin-top: 2rem;">Coming Up - Day 3:</h3>
+                <ul>
+                    <li>📝 Prompt engineering fundamentals (4 S's framework)</li>
+                    <li>🎯 Advanced prompting techniques (chain of thought, few-shot)</li>
+                    <li>💬 Copilot Chat mastery (slash commands, participants, context variables)</li>
+                    <li>✅ Best practices for verification and error handling</li>
+                    <li>🎨 Real-world prompt examples and patterns</li>
+                </ul>
+
+                <div class="warning-box" style="margin-top: 2rem;">
+                    <strong>📚 Homework Assignment:</strong>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Identify 3 use cases from your current projects that match today's patterns</li>
+                        <li>Classify them: Greenfield, Feature Addition, Optimization, or Modernization</li>
+                        <li>Estimate potential time savings using AI assistance</li>
+                        <li>Come prepared to discuss your scenarios tomorrow!</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #1e5a96; margin-top: 2rem;">Questions to Ponder Before Day 3:</h3>
+                <ol>
+                    <li>What performance bottlenecks exist in your critical user flows?</li>
+                    <li>Which legacy systems cause the most development friction?</li>
+                    <li>What new features would provide the highest business value?</li>
+                    <li>How will you measure AI-assisted development success?</li>
+                </ol>
+
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <div class="insight-title">💡 Final Thought</div>
+                    <p><strong>"The best way to predict the future is to build it—with the best tools available."</strong></p>
+                    <p style="margin-top: 0.5rem;">Today you learned not just HOW to use GitHub Copilot, but more importantly WHEN and WHY to use it for different scenarios. Strategic application of AI assistance separates good developers from great development teams.</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%); color: white; padding: 1.5rem; border-radius: 10px; margin-top: 2rem;">
+                    <h4 style="color: #ff6b35; margin-bottom: 0.5rem;">📊 Today's Impact Calculator</h4>
+                    <p>If RetailTech's 5 developers save just 2 hours per day with Copilot:</p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><strong>Daily:</strong> 10 hours recovered</li>
+                        <li><strong>Weekly:</strong> 50 hours = 1.25 additional developers</li>
+                        <li><strong>Monthly:</strong> 200 hours = 5 additional developers</li>
+                        <li><strong>Yearly:</strong> 2,400 hours = $240,000 in value (at $100/hr)</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Investment:</strong> $19/user × 5 × 12 = $1,140/year</p>
+                    <p><strong>ROI:</strong> 21,000% or 210x return</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%); color: white; padding: 2rem; border-radius: 15px; text-align: center; margin-top: 3rem;">
+            <h3 style="color: #ff6b35; margin-bottom: 1rem;">Excellent Work Today! 🎉</h3>
+            <p>Day 2 Complete - Tomorrow we master the art of prompting!</p>
+            <p style="margin-top: 1rem;">Remember: Practice the demos in your LMS environment</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                <strong>Stay SPRY. Stay Smart.</strong>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            answer.classList.toggle('show');
+        }
+
+        function checkAnswer(element, isCorrect, feedbackId) {
+            // Remove previous selections
+            const options = element.parentElement.getElementsByClassName('mcq-option');
+            for (let option of options) {
+                option.classList.remove('correct', 'incorrect');
+            }
+
+            // Mark selected answer
+            if (isCorrect) {
+                element.classList.add('correct');
+                showFeedback(feedbackId, true);
+            } else {
+                element.classList.add('incorrect');
+                showFeedback(feedbackId, false);
+            }
+        }
+
+        function showFeedback(feedbackId, isCorrect) {
+            const feedback = document.getElementById(feedbackId);
+            feedback.classList.add('show');
+            
+            if (isCorrect) {
+                feedback.style.background = '#d4edda';
+                feedback.style.color = '#155724';
+                feedback.style.border = '2px solid #28a745';
+                feedback.innerHTML = '✅ Correct! Excellent understanding!';
+            } else {
+                feedback.style.background = '#f8d7da';
+                feedback.style.color = '#721c24';
+                feedback.style.border = '2px solid #dc3545';
+                feedback.innerHTML = '❌ Not quite. Review the content and try again!';
+            }
+        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>

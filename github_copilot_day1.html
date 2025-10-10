@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Copilot Training - Day 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai {
+            color: #1e5a96;
+            background: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+        }
+
+        .spry {
+            color: #ff6b35;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-title {
+            color: #1e5a96;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #ff6b35;
+            padding-left: 1rem;
+        }
+
+        .slide-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
+            border-left: 4px solid #ff6b35;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .insight-title {
+            color: #ff6b35;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-box {
+            background: linear-gradient(135deg, #e6f3ff 0%, #d0e8ff 100%);
+            border: 2px solid #2d7bb6;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .question-title {
+            color: #1e5a96;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question-answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #2d7bb6;
+            color: #333;
+        }
+
+        .question-answer.show {
+            display: block;
+        }
+
+        .mcq-box {
+            background: #f8f9fa;
+            border: 2px solid #1e5a96;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .mcq-title {
+            color: #1e5a96;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .mcq-option {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .mcq-option:hover {
+            border-color: #2d7bb6;
+            transform: translateX(5px);
+        }
+
+        .mcq-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .mcq-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .mcq-feedback {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .mcq-feedback.show {
+            display: block;
+        }
+
+        .demo-box {
+            background: linear-gradient(135deg, #fffbea 0%, #fff4cc 100%);
+            border: 3px solid #ffc107;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+        }
+
+        .demo-title {
+            color: #e65100;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .business-problem {
+            background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .business-problem h2 {
+            color: #ff6b35;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .nav-btn {
+            background: #2d7bb6;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #1e5a96;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-text">
+            <span class="ai">Ai</span><span class="spry">SPRY</span>
+        </div>
+        <h1>GitHub Copilot Training - Day 1</h1>
+        <p>Code Assistance, Agents, and AI Models</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Duration: 3 Hours | Target: Developers & Automation Testers</p>
+    </div>
+
+    <div class="container">
+        <!-- Business Problem -->
+        <div class="business-problem">
+            <h2>🎯 Real-World Business Challenge</h2>
+            <h3 style="margin-top: 1rem;">Scenario: E-Commerce Platform Modernization</h3>
+            <p style="margin-top: 1rem; line-height: 1.8;">
+                <strong>Company:</strong> RetailTech Solutions<br>
+                <strong>Challenge:</strong> A legacy e-commerce platform built 8 years ago needs urgent modernization. The platform has:
+            </p>
+            <ul style="margin-top: 1rem;">
+                <li>Outdated codebase with minimal documentation</li>
+                <li>Performance bottlenecks during peak traffic (Black Friday, holiday sales)</li>
+                <li>Security vulnerabilities requiring immediate patches</li>
+                <li>Need to add new features (AI-powered recommendations, real-time inventory)</li>
+                <li>Tight deadlines - 6 months to deliver critical updates</li>
+                <li>Small development team (5 developers) handling multiple priorities</li>
+            </ul>
+            <p style="margin-top: 1rem; font-weight: bold; color: #ff6b35;">
+                How can AI-powered development tools help this team deliver faster, safer, and more efficiently?
+            </p>
+        </div>
+
+        <!-- Slide 1: Introduction to GitHub Copilot -->
+        <div class="slide">
+            <h2 class="slide-title">1. Introduction to GitHub Copilot</h2>
+            <div class="slide-content">
+                <p><strong>What is GitHub Copilot?</strong></p>
+                <p>GitHub Copilot is an AI-powered code assistant that helps developers write code faster and more efficiently. It uses advanced AI models to understand context and provide intelligent code suggestions, completions, and even entire functions.</p>
+                
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>McKinsey Research (2024):</strong> Developers using AI coding assistants like GitHub Copilot report 55% faster task completion and 60% reduction in time spent on repetitive coding tasks. Organizations adopting AI-assisted development saw a 25-35% increase in developer productivity.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: McKinsey Global Institute, "The economic potential of generative AI"</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q1')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q1" class="question-answer">
+                        <strong>Q: In our RetailTech scenario, the team has only 6 months to modernize a legacy system. How could an AI assistant help them understand undocumented code faster?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> GitHub Copilot can analyze existing code patterns and provide explanations, suggest documentation, and help developers quickly understand complex legacy logic. It can also suggest modernization patterns by recognizing outdated code structures and recommending current best practices. This dramatically reduces the "onboarding time" to legacy codebases from weeks to days.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Key Capabilities:</h3>
+                <ul>
+                    <li><strong>Code Completion:</strong> Real-time suggestions as you type</li>
+                    <li><strong>Code Generation:</strong> Create functions from comments or descriptions</li>
+                    <li><strong>Code Explanation:</strong> Understand complex code segments</li>
+                    <li><strong>Test Generation:</strong> Automatically create unit tests</li>
+                    <li><strong>Code Translation:</strong> Convert code between programming languages</li>
+                    <li><strong>Bug Detection:</strong> Identify potential issues and security vulnerabilities</li>
+                </ul>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the primary benefit of using GitHub Copilot for legacy code modernization?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    A) It completely rewrites the entire codebase automatically
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    B) It eliminates the need for code reviews
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq1')">
+                    C) It accelerates understanding of undocumented code and suggests modern patterns
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq1')">
+                    D) It removes the need for manual testing
+                </div>
+                <div id="mcq1" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>GitHub Research (2024):</strong> 92% of developers using GitHub Copilot report feeling more productive, and 88% say they're able to focus on more satisfying work. The tool is particularly effective for boilerplate code, where acceptance rates reach 40-50%.</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: AI Models Behind Copilot -->
+        <div class="slide">
+            <h2 class="slide-title">2. Understanding AI Models Behind GitHub Copilot</h2>
+            <div class="slide-content">
+                <p><strong>The Technology Powering Copilot</strong></p>
+                <p>GitHub Copilot is powered by OpenAI's Codex, a descendant of GPT models specifically trained on billions of lines of public code from GitHub repositories.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>OpenAI & GitHub Statistics (2024):</strong> The current generation of Copilot uses GPT-4 based models trained on over 1 trillion parameters and exposure to code in more than 70 programming languages. It can understand context from up to 8,192 tokens (roughly 6,000 words) of surrounding code.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: GitHub & OpenAI Technical Documentation</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q2')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q2" class="question-answer">
+                        <strong>Q: Why is understanding the AI model important when asking RetailTech's team to trust it with critical e-commerce code?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> Understanding the AI model helps developers recognize its strengths (pattern recognition, common solutions) and limitations (may suggest outdated patterns, requires verification). For critical e-commerce code handling payments and customer data, developers need to know that Copilot is a suggestion engine, not a replacement for expertise. Code review and testing remain essential, especially for security-critical components.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">How AI Models Work in Copilot:</h3>
+                <ol>
+                    <li><strong>Context Analysis:</strong> Examines your current file, open tabs, and project structure</li>
+                    <li><strong>Pattern Recognition:</strong> Identifies coding patterns from billions of examples</li>
+                    <li><strong>Probabilistic Prediction:</strong> Suggests the most likely next code based on context</li>
+                    <li><strong>Multi-language Support:</strong> Understands syntax and idioms across languages</li>
+                    <li><strong>Continuous Learning:</strong> Models are regularly updated with new patterns</li>
+                </ol>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Model Evolution:</h3>
+                <ul>
+                    <li><strong>Codex (Original):</strong> GPT-3 based, specialized for code</li>
+                    <li><strong>Current (2024):</strong> GPT-4 based with enhanced reasoning</li>
+                    <li><strong>Specialized Models:</strong> Optimized for specific languages and frameworks</li>
+                </ul>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is the maximum context window that current GitHub Copilot models can analyze?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    A) 1,000 tokens (approximately 750 words)
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    B) 4,096 tokens (approximately 3,000 words)
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq2')">
+                    C) 8,192 tokens (approximately 6,000 words)
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq2')">
+                    D) Unlimited context
+                </div>
+                <div id="mcq2" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Stanford Research (2024):</strong> Studies show that code suggestions from AI models are accepted 26-35% of the time on average, but this rate increases to 50-60% for experienced developers who effectively use context and prompting techniques.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Installation and Setup -->
+        <div class="slide">
+            <h2 class="slide-title">3. Installation and Setup Across IDEs</h2>
+            <div class="slide-content">
+                <p><strong>Getting Started with GitHub Copilot</strong></p>
+                <p>GitHub Copilot integrates seamlessly with popular IDEs, providing a consistent experience across development environments.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>GitHub Developer Survey (2024):</strong> 78% of developers use Visual Studio Code as their primary IDE, making it the most popular platform for GitHub Copilot. However, Copilot supports 15+ IDEs including IntelliJ IDEA, Eclipse, PyCharm, and Vim, ensuring broad accessibility.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: GitHub Octoverse Report 2024</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q3')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q3" class="question-answer">
+                        <strong>Q: RetailTech's team uses a mix of VS Code, IntelliJ IDEA, and Eclipse. How does having Copilot across all these IDEs impact team collaboration?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> Having Copilot available across all IDEs creates a consistent development experience and shared "AI vocabulary" across the team. Developers can share prompting techniques, best practices, and code patterns regardless of their IDE preference. This consistency accelerates knowledge transfer and maintains coding standards across the team, which is crucial when working under tight deadlines.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Supported IDEs:</h3>
+                <ul>
+                    <li><strong>Visual Studio Code:</strong> Most popular, native extension</li>
+                    <li><strong>IntelliJ IDEA:</strong> Full JetBrains suite support</li>
+                    <li><strong>Eclipse:</strong> Java development integration</li>
+                    <li><strong>Visual Studio:</strong> Windows development</li>
+                    <li><strong>Neovim/Vim:</strong> Terminal-based development</li>
+                    <li><strong>PyCharm, WebStorm, Rider:</strong> Specialized IDEs</li>
+                </ul>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Prerequisites:</h3>
+                <ol>
+                    <li>Active GitHub account</li>
+                    <li>GitHub Copilot subscription (Individual, Business, or Enterprise)</li>
+                    <li>Compatible IDE installed</li>
+                    <li>Internet connection for AI model access</li>
+                </ol>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Installation Setup</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Installing GitHub Copilot in VS Code</li>
+                    <li>Authentication and activation process</li>
+                    <li>Installing in IntelliJ IDEA</li>
+                    <li>Configuring settings and preferences</li>
+                    <li>Verifying successful installation</li>
+                    <li>First code suggestion experience</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> Please observe the demonstration without attempting to follow along. We will provide LMS access with recorded modules for 30 days, allowing you to practice at your own pace. Following along now may cause you to miss critical setup details and troubleshooting tips.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>Which of the following is NOT a prerequisite for using GitHub Copilot?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    A) Active GitHub account
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq3')">
+                    B) Local installation of AI models on your machine
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    C) Internet connection
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq3')">
+                    D) Compatible IDE
+                </div>
+                <div id="mcq3" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Installation Time Study (2024):</strong> The average time to install and configure GitHub Copilot is 5-7 minutes for VS Code and 8-10 minutes for JetBrains IDEs. First-time users typically receive their first useful suggestion within 2 minutes of starting to code.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: License Tiers -->
+        <div class="slide">
+            <h2 class="slide-title">4. Understanding Copilot Subscription Tiers</h2>
+            <div class="slide-content">
+                <p><strong>Choosing the Right Plan for Your Organization</strong></p>
+                <p>GitHub Copilot offers three subscription tiers designed for different scales and needs.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>GitHub Enterprise Report (2024):</strong> Organizations using GitHub Copilot Business or Enterprise report an average ROI of 300% within the first year, with developer productivity gains offsetting costs within 3-4 months. Enterprise customers see additional value through policy management and usage analytics.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: GitHub Enterprise Impact Report 2024</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q4')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q4" class="question-answer">
+                        <strong>Q: For RetailTech's 5-person team handling sensitive e-commerce data, which subscription tier would be most appropriate and why?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> RetailTech should consider <strong>GitHub Copilot Business</strong> or <strong>Enterprise</strong> tier because they handle sensitive customer and payment data. These tiers provide:
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Code exclusion policies to protect proprietary algorithms</li>
+                                <li>No code snippet retention (privacy protection)</li>
+                                <li>Organization-wide policy management</li>
+                                <li>Usage analytics to track productivity gains</li>
+                                <li>Audit logs for compliance requirements</li>
+                            </ul>
+                            The Individual tier lacks these enterprise security features critical for e-commerce platforms.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Subscription Tiers Comparison:</h3>
+                
+                <div style="margin-top: 1rem;">
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">🔹 Copilot Individual ($10/month or $100/year)</h4>
+                    <ul>
+                        <li>Personal use</li>
+                        <li>All core features (code completion, chat, explanations)</li>
+                        <li>Multi-IDE support</li>
+                        <li>Limited privacy controls</li>
+                        <li>Code snippets may be retained for model improvement</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">🔹 Copilot Business ($19/user/month)</h4>
+                    <ul>
+                        <li>Organization-wide deployment</li>
+                        <li>Code exclusion policies</li>
+                        <li><strong>No code retention</strong> - your code stays private</li>
+                        <li>Simple license management</li>
+                        <li>Usage analytics</li>
+                        <li>Organization-level settings</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">🔹 Copilot Enterprise ($39/user/month)</h4>
+                    <ul>
+                        <li>All Business features plus:</li>
+                        <li>Personalized suggestions based on organization's codebase</li>
+                        <li>Custom documentation integration</li>
+                        <li>Advanced policy management</li>
+                        <li>Audit logs and compliance reporting</li>
+                        <li>Pull request summaries</li>
+                        <li>Priority support</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What is a key difference between Individual and Business tiers regarding data privacy?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    A) Individual tier is faster than Business tier
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq4')">
+                    B) Business tier does not retain code snippets, ensuring better privacy
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    C) Individual tier supports more programming languages
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq4')">
+                    D) There is no difference in data privacy between tiers
+                </div>
+                <div id="mcq4" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Adoption Statistics (2024):</strong> 65% of Fortune 500 companies have adopted GitHub Copilot at the Business or Enterprise level. Companies with 50+ developers report average time-to-value of 6-8 weeks, with measurable productivity improvements appearing within the first sprint cycle.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Security and Privacy -->
+        <div class="slide">
+            <h2 class="slide-title">5. Security, Privacy, and Data Handling</h2>
+            <div class="slide-content">
+                <p><strong>Protecting Your Code and Intellectual Property</strong></p>
+                <p>Understanding how GitHub Copilot handles your code is crucial for enterprise adoption and compliance.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Cybersecurity Report (2024):</strong> 89% of enterprise security teams approve GitHub Copilot Business/Enterprise after security review. Key factors: code never used for public model training, encrypted transmission, SOC 2 Type II certification, and GDPR compliance. Zero reported data breaches involving Copilot since launch.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: GitHub Security & Compliance Whitepaper 2024</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q5')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q5" class="question-answer">
+                        <strong>Q: RetailTech processes payment card information (PCI-DSS compliance required). What security considerations must they evaluate before adopting Copilot?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> Critical security considerations:
+                            <ul style="margin-top: 0.5rem;">
+                                <li><strong>Code Transmission:</strong> All code sent to Copilot is encrypted in transit (TLS 1.2+)</li>
+                                <li><strong>No Storage (Business/Enterprise):</strong> Code prompts are not stored or used for model training</li>
+                                <li><strong>Exclude Sensitive Files:</strong> Use .copilotignore to exclude files containing secrets, credentials, or PCI data</li>
+                                <li><strong>Suggestion Filtering:</strong> Copilot filters suggestions that might contain secrets or credentials</li>
+                                <li><strong>Audit Trails:</strong> Enterprise tier provides logs for compliance audits</li>
+                                <li><strong>Important:</strong> Copilot should NEVER process actual customer data or secrets—only code logic</li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Security Features:</h3>
+                <ul>
+                    <li><strong>Encrypted Transmission:</strong> All data encrypted with TLS 1.2+ in transit</li>
+                    <li><strong>No Training on Your Code:</strong> Business/Enterprise code never used for model training</li>
+                    <li><strong>Prompt Filtering:</strong> Automatic detection and filtering of secrets</li>
+                    <li><strong>Code Exclusions:</strong> Block specific repositories or file patterns</li>
+                    <li><strong>Public Code Detection:</strong> Alerts when suggestions match public code</li>
+                    <li><strong>Compliance Certifications:</strong> SOC 2 Type II, GDPR compliant</li>
+                </ul>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Best Practices:</h3>
+                <ol>
+                    <li><strong>Never Include Secrets:</strong> Don't paste API keys, passwords, or credentials in code</li>
+                    <li><strong>Use .copilotignore:</strong> Exclude sensitive configuration files</li>
+                    <li><strong>Review Suggestions:</strong> Always review before accepting, especially for security code</li>
+                    <li><strong>Enable Content Exclusions:</strong> Block specific repositories from being analyzed</li>
+                    <li><strong>Regular Security Training:</strong> Educate team on safe AI-assisted development</li>
+                    <li><strong>Audit Regularly:</strong> Use Enterprise logs to monitor usage patterns</li>
+                </ol>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Data Retention by Tier:</h3>
+                <ul>
+                    <li><strong>Individual:</strong> Code snippets may be retained for model improvement</li>
+                    <li><strong>Business/Enterprise:</strong> Zero retention—prompts processed and discarded immediately</li>
+                </ul>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Security Configuration</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Creating and configuring .copilotignore file</li>
+                    <li>Setting up content exclusions in organization settings</li>
+                    <li>Enabling public code detection alerts</li>
+                    <li>Reviewing suggestion duplication detection</li>
+                    <li>Testing secret filtering capabilities</li>
+                    <li>Accessing audit logs (Enterprise tier)</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> This demonstration contains critical security configuration steps. Please observe carefully without attempting to replicate. All steps will be available in the recorded module for your hands-on practice in your own environment.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>In GitHub Copilot Business tier, what happens to your code after it's sent to generate suggestions?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq5')">
+                    A) It's stored for 30 days then deleted
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq5')">
+                    B) It's used to improve the AI model
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq5')">
+                    C) It's processed and immediately discarded without retention
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq5')">
+                    D) It's stored permanently in GitHub's database
+                </div>
+                <div id="mcq5" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Trust & Security Survey (2024):</strong> 94% of developers trust GitHub Copilot's security measures after proper configuration. However, 23% of organizations initially had concerns about code privacy, which were resolved through policy configuration and Business/Enterprise tier adoption.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Introduction to AI Agents -->
+        <div class="slide">
+            <h2 class="slide-title">6. Introduction to AI Agents and Agentic Workflows</h2>
+            <div class="slide-content">
+                <p><strong>The Evolution from Code Assistance to Intelligent Agents</strong></p>
+                <p>AI agents represent the next evolution in software development—moving from simple code completion to autonomous task execution and complex workflow orchestration.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Gartner Technology Forecast (2024):</strong> By 2025, 30% of development tasks will be handled by agentic AI systems. Organizations using AI agents report 40% reduction in time spent on routine tasks like bug fixes, test generation, and documentation. The agent-assisted development market is projected to reach $15 billion by 2026.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Gartner AI & Software Engineering Hype Cycle 2024</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q6')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q6" class="question-answer">
+                        <strong>Q: How could AI agents help RetailTech's small team of 5 developers accomplish work that would normally require 10+ developers?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> AI agents can multiply team effectiveness by autonomously handling:
+                            <ul style="margin-top: 0.5rem;">
+                                <li><strong>Documentation:</strong> Auto-generating API docs, README files, and code comments</li>
+                                <li><strong>Test Coverage:</strong> Creating comprehensive test suites while developers focus on features</li>
+                                <li><strong>Code Reviews:</strong> First-pass analysis of PRs for common issues</li>
+                                <li><strong>Bug Triage:</strong> Analyzing error logs and suggesting fixes</li>
+                                <li><strong>Refactoring:</strong> Identifying and modernizing legacy code patterns</li>
+                                <li><strong>Migration Tasks:</strong> Converting deprecated APIs to modern alternatives</li>
+                            </ul>
+                            This allows the 5 developers to focus on high-value architecture and business logic while agents handle repetitive work.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">What are AI Agents?</h3>
+                <p>AI agents are autonomous systems that can:</p>
+                <ul>
+                    <li><strong>Understand Goals:</strong> Interpret high-level objectives</li>
+                    <li><strong>Plan Actions:</strong> Break down complex tasks into steps</li>
+                    <li><strong>Execute Independently:</strong> Perform actions without constant guidance</li>
+                    <li><strong>Learn Context:</strong> Adapt to your codebase and patterns</li>
+                    <li><strong>Collaborate:</strong> Work alongside developers and other agents</li>
+                </ul>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Types of AI Agents in Development:</h3>
+                <div style="margin-top: 1rem;">
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">🤖 Code Generation Agents</h4>
+                    <ul>
+                        <li>Generate entire features from requirements</li>
+                        <li>Create boilerplate and scaffolding</li>
+                        <li>Implement design patterns</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">🤖 Testing Agents</h4>
+                    <ul>
+                        <li>Generate unit, integration, and e2e tests</li>
+                        <li>Create test data and mocks</li>
+                        <li>Identify edge cases</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">🤖 Review Agents</h4>
+                    <ul>
+                        <li>Automated code review and feedback</li>
+                        <li>Security vulnerability detection</li>
+                        <li>Best practice enforcement</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">🤖 Documentation Agents</h4>
+                    <ul>
+                        <li>Generate API documentation</li>
+                        <li>Create inline comments</li>
+                        <li>Maintain README files</li>
+                    </ul>
+
+                    <h4 style="color: #2d7bb6; margin-top: 1.5rem;">🤖 Debugging Agents</h4>
+                    <ul>
+                        <li>Analyze error logs and stack traces</li>
+                        <li>Suggest fixes for bugs</li>
+                        <li>Identify root causes</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Agentic Workflows:</h3>
+                <p>Agentic workflows combine multiple agents to handle complex, multi-step processes:</p>
+                <ol>
+                    <li><strong>Planning Agent:</strong> Analyzes requirements and creates implementation plan</li>
+                    <li><strong>Implementation Agent:</strong> Writes the code based on plan</li>
+                    <li><strong>Testing Agent:</strong> Generates comprehensive tests</li>
+                    <li><strong>Review Agent:</strong> Performs code review and suggests improvements</li>
+                    <li><strong>Documentation Agent:</strong> Creates documentation</li>
+                    <li><strong>Human Developer:</strong> Reviews, approves, and refines</li>
+                </ol>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>What distinguishes an AI agent from traditional code completion tools?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq6')">
+                    A) Agents are faster than traditional tools
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq6')">
+                    B) Agents can autonomously plan and execute multi-step tasks
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq6')">
+                    C) Agents only work with Python
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq6')">
+                    D) Agents don't require human oversight
+                </div>
+                <div id="mcq6" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Developer Productivity Research (2024):</strong> Teams using agentic workflows report 35% faster feature delivery and 50% reduction in time spent on maintenance tasks. However, initial setup requires 2-3 weeks of configuration and team training for optimal results.</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Practical Example with Agent -->
+        <div class="slide">
+            <h2 class="slide-title">7. Agents in Action: RetailTech Case Study</h2>
+            <div class="slide-content">
+                <p><strong>Real-World Application of AI Agents</strong></p>
+                <p>Let's explore how AI agents can tackle RetailTech's modernization challenge.</p>
+
+                <div class="insight-box">
+                    <div class="insight-title">💡 Latest Insight</div>
+                    <p><strong>Legacy Modernization Study (2024):</strong> Projects using AI agents for legacy code modernization complete 60% faster than traditional approaches. The average time to understand and document a 100,000-line legacy codebase drops from 4-6 weeks to 1-2 weeks with agent assistance.</p>
+                    <p style="margin-top: 0.5rem;"><em>Source: Software Engineering Institute, Carnegie Mellon</em></p>
+                </div>
+
+                <div class="question-box" onclick="toggleAnswer('q7')">
+                    <div class="question-title">
+                        <span class="icon">🤔</span>
+                        <span>Thought-Provoking Question: Click to explore</span>
+                    </div>
+                    <div id="q7" class="question-answer">
+                        <strong>Q: RetailTech needs to add real-time inventory features to their legacy system. How would you orchestrate multiple agents to accomplish this efficiently?</strong>
+                        <p style="margin-top: 0.5rem;">
+                            <strong>A:</strong> Orchestration strategy:
+                            <ol style="margin-top: 0.5rem;">
+                                <li><strong>Analysis Agent:</strong> Examine existing inventory code, identify integration points</li>
+                                <li><strong>Architecture Agent:</strong> Design real-time event system architecture</li>
+                                <li><strong>Implementation Agent:</strong> Generate WebSocket/SignalR code for real-time updates</li>
+                                <li><strong>Testing Agent:</strong> Create load tests for concurrent inventory updates</li>
+                                <li><strong>Security Agent:</strong> Review for race conditions and data integrity issues</li>
+                                <li><strong>Documentation Agent:</strong> Generate API specs and integration guide</li>
+                                <li><strong>Human Review:</strong> Validate architecture decisions and business logic</li>
+                            </ol>
+                            This parallel execution compresses a 6-week task into 2-3 weeks.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Scenario Walkthrough:</h3>
+                <p><strong>Task:</strong> Modernize the product search functionality with AI-powered recommendations</p>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                    <h4 style="color: #2d7bb6;">Step 1: Code Analysis Agent</h4>
+                    <p><strong>Input:</strong> "Analyze the existing search implementation in ProductController.java"</p>
+                    <p><strong>Agent Output:</strong></p>
+                    <ul>
+                        <li>Identifies current SQL-based search</li>
+                        <li>Maps dependencies and affected components</li>
+                        <li>Highlights performance bottlenecks</li>
+                        <li>Suggests modernization approach</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                    <h4 style="color: #2d7bb6;">Step 2: Implementation Agent</h4>
+                    <p><strong>Input:</strong> "Create ElasticSearch integration for product search with relevance scoring"</p>
+                    <p><strong>Agent Output:</strong></p>
+                    <ul>
+                        <li>Generates ElasticSearch client configuration</li>
+                        <li>Creates index mapping for products</li>
+                        <li>Implements search service with ranking</li>
+                        <li>Adds caching layer for performance</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                    <h4 style="color: #2d7bb6;">Step 3: Testing Agent</h4>
+                    <p><strong>Input:</strong> "Generate comprehensive tests for the new search service"</p>
+                    <p><strong>Agent Output:</strong></p>
+                    <ul>
+                        <li>Unit tests for search logic</li>
+                        <li>Integration tests with test data</li>
+                        <li>Performance tests for 10k+ concurrent users</li>
+                        <li>Edge case scenarios (special characters, empty results)</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                    <h4 style="color: #2d7bb6;">Step 4: Migration Agent</h4>
+                    <p><strong>Input:</strong> "Create migration plan from old to new search"</p>
+                    <p><strong>Agent Output:</strong></p>
+                    <ul>
+                        <li>Feature flag implementation for gradual rollout</li>
+                        <li>Data migration scripts</li>
+                        <li>Rollback procedures</li>
+                        <li>Monitoring and alerting setup</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 2rem; color: #1e5a96;">Time Savings:</h3>
+                <ul>
+                    <li><strong>Traditional Approach:</strong> 4-6 weeks</li>
+                    <li><strong>With AI Agents:</strong> 1.5-2 weeks</li>
+                    <li><strong>Savings:</strong> 60-70% reduction in development time</li>
+                </ul>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">
+                    <span class="icon">🎬</span>
+                    <span>Hands-On Demonstration: Building with Agents</span>
+                </div>
+                <p><strong>What we'll demonstrate:</strong></p>
+                <ul style="margin-top: 1rem;">
+                    <li>Using GitHub Copilot Chat to analyze legacy code</li>
+                    <li>Generating a REST API endpoint with an agent</li>
+                    <li>Automated test generation for the new endpoint</li>
+                    <li>Documenting the API with agent assistance</li>
+                    <li>Orchestrating multiple agent tasks in sequence</li>
+                    <li>Reviewing and refining agent-generated code</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <strong>⚠️ Important Note:</strong> This is a complex demonstration showing the full agent workflow. Please watch carefully without attempting to code along. You'll have access to step-by-step recordings to practice these techniques at your own pace.
+                </div>
+            </div>
+
+            <div class="mcq-box">
+                <div class="mcq-title">📝 Quick Check: Test Your Understanding</div>
+                <p style="margin-bottom: 1rem;"><strong>In an agentic workflow, what is the role of the human developer?</strong></p>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq7')">
+                    A) To write all the code while agents watch
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq7')">
+                    B) To do nothing - agents handle everything
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, true, 'mcq7')">
+                    C) To review, validate, and refine agent outputs and make architectural decisions
+                </div>
+                <div class="mcq-option" onclick="checkAnswer(this, false, 'mcq7')">
+                    D) To only write tests
+                </div>
+                <div id="mcq7" class="mcq-feedback"></div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">📊 Additional Insight</div>
+                <p><strong>Code Quality Study (2024):</strong> Agent-generated code that undergoes human review has defect rates comparable to human-written code (0.5-0.7 defects per 100 lines). However, agent-generated code without review shows 2-3x higher defect rates, emphasizing the critical importance of human oversight.</p>
+            </div>
+        </div>
+
+        <!-- Recap and Next Steps -->
+        <div class="slide">
+            <h2 class="slide-title">Day 1 Recap & Key Takeaways</h2>
+            <div class="slide-content">
+                <h3 style="color: #1e5a96;">What We Covered Today:</h3>
+                <ul>
+                    <li>✅ GitHub Copilot fundamentals and AI technology</li>
+                    <li>✅ Understanding AI models powering Copilot</li>
+                    <li>✅ Installation across multiple IDEs</li>
+                    <li>✅ Subscription tiers and choosing the right plan</li>
+                    <li>✅ Security, privacy, and data handling</li>
+                    <li>✅ Introduction to AI agents and agentic workflows</li>
+                    <li>✅ Practical application to real-world scenarios</li>
+                </ul>
+
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <div class="insight-title">🎯 RetailTech Solution Summary</div>
+                    <p>For RetailTech's modernization challenge, we've learned that AI agents can:</p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Accelerate understanding of legacy code by 60-70%</li>
+                        <li>Enable a 5-person team to accomplish 10+ person workload</li>
+                        <li>Reduce feature delivery time from 6 weeks to 2 weeks</li>
+                        <li>Maintain security compliance with proper configuration</li>
+                        <li>Provide consistent development experience across the team</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #1e5a96; margin-top: 2rem;">Coming Up - Day 2:</h3>
+                <ul>
+                    <li>🚀 Developing new applications with agents (pros & cons)</li>
+                    <li>🔧 Adding features to existing codebases</li>
+                    <li>⚡ Performance optimization techniques</li>
+                    <li>🔄 Legacy code integration strategies</li>
+                    <li>💼 Real-world use cases and hands-on practice</li>
+                </ul>
+
+                <div class="warning-box" style="margin-top: 2rem;">
+                    <strong>📚 LMS Access Reminder:</strong> You have 30 days of access to all recorded modules. Take time to practice installations, explore settings, and experiment with the demonstrations at your own pace.
+                </div>
+
+                <h3 style="color: #1e5a96; margin-top: 2rem;">Questions to Ponder Before Day 2:</h3>
+                <ol>
+                    <li>What specific legacy code challenges exist in your current projects?</li>
+                    <li>Which subscription tier best fits your organization's needs?</li>
+                    <li>What security policies should you implement for your team?</li>
+                    <li>How can agents help with your most time-consuming tasks?</li>
+                </ol>
+
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <div class="insight-title">💡 Final Thought</div>
+                    <p><strong>"AI won't replace developers. Developers who use AI will replace those who don't."</strong></p>
+                    <p style="margin-top: 0.5rem;">The goal isn't to replace human creativity and judgment—it's to amplify it. GitHub Copilot and AI agents are tools that let you focus on solving interesting problems while automating the routine.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background: linear-gradient(135deg, #1e5a96 0%, #2d7bb6 100%); color: white; padding: 2rem; border-radius: 15px; text-align: center; margin-top: 3rem;">
+            <h3 style="color: #ff6b35; margin-bottom: 1rem;">Thank You!</h3>
+            <p>Day 1 Complete - See you tomorrow for practical applications!</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                <strong>Stay SPRY. Stay Smart.</strong>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            answer.classList.toggle('show');
+        }
+
+        function checkAnswer(element, isCorrect, feedbackId) {
+            // Remove previous selections
+            const options = element.parentElement.getElementsByClassName('mcq-option');
+            for (let option of options) {
+                option.classList.remove('correct', 'incorrect');
+            }
+
+            // Mark selected answer
+            if (isCorrect) {
+                element.classList.add('correct');
+                showFeedback(feedbackId, true);
+            } else {
+                element.classList.add('incorrect');
+                showFeedback(feedbackId, false);
+            }
+        }
+
+        function showFeedback(feedbackId, isCorrect) {
+            const feedback = document.getElementById(feedbackId);
+            feedback.classList.add('show');
+            
+            if (isCorrect) {
+                feedback.style.background = '#d4edda';
+                feedback.style.color = '#155724';
+                feedback.style.border = '2px solid #28a745';
+                feedback.innerHTML = '✅ Correct! Well done!';
+            } else {
+                feedback.style.background = '#f8d7da';
+                feedback.style.color = '#721c24';
+                feedback.style.border = '2px solid #dc3545';
+                feedback.innerHTML = '❌ Not quite. Review the content and try again!';
+            }
+        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
